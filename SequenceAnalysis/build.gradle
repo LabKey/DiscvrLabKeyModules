@@ -31,35 +31,32 @@ dependencies {
    }
 }
 
-if (project.findProject(BuildUtils.getTestProjectPath(project.gradle)) != null)
+if (project.findProject(BuildUtils.getTestProjectPath(project.gradle)) != null && project.hasProperty("teamcity"))
 {
    def testProject = project.findProject(BuildUtils.getTestProjectPath(project.gradle))
-   if (testProject.plugins.hasPlugin(TeamCity.class))
-   {
-      def createPipelineConfigTask = project.tasks.register("createPipelineConfig", Copy) {
-         Copy task ->
-            task.group = GroupNames.TEST_SERVER
-            task.description = "Create pipeline configs for running tests on the test server"
-            task.from project.file("test/configs")
-            task.include "pipelinConfig.xml"
-            task.filter({ String line ->
-               Matcher matcher = PropertiesUtils.PROPERTY_PATTERN.matcher(line)
-               def extension = testProject.extensions.findByType(TeamCityExtension.class)
-               String newLine = line
-               while (matcher.find())
-               {
-                  if (matcher.group(1).equals("SEQUENCEANALYSIS_CODELOCATION") || matcher.group(1).equals("SEQUENCEANALYSIS_TOOLS"))
-                     newLine = newLine.replace(matcher.group(), extension.getTeamCityProperty("additional.pipeline.tools"))
-                  else if (matcher.group(1).equals("SEQUENCEANALYSIS_EXTERNALDIR"))
-                     newLine = newLine.replace(matcher.group(), project.file("pipeline_code/external").getAbsolutePath())
-               }
-               return newLine
+   def createPipelineConfigTask = project.tasks.register("createPipelineConfig", Copy) {
+      Copy task ->
+         task.group = GroupNames.TEST_SERVER
+         task.description = "Create pipeline configs for running tests on the test server"
+         task.from project.file("test/configs")
+         task.include "pipelinConfig.xml"
+         task.filter({ String line ->
+            Matcher matcher = PropertiesUtils.PROPERTY_PATTERN.matcher(line)
+            def extension = testProject.extensions.findByType(TeamCityExtension.class)
+            String newLine = line
+            while (matcher.find())
+            {
+               if (matcher.group(1).equals("SEQUENCEANALYSIS_CODELOCATION") || matcher.group(1).equals("SEQUENCEANALYSIS_TOOLS"))
+                  newLine = newLine.replace(matcher.group(), extension.getTeamCityProperty("additional.pipeline.tools"))
+               else if (matcher.group(1).equals("SEQUENCEANALYSIS_EXTERNALDIR"))
+                  newLine = newLine.replace(matcher.group(), project.file("pipeline_code/external").getAbsolutePath())
+            }
+            return newLine
 
-            })
-            task.destinationDir = new File("${ServerDeployExtension.getServerDeployDirectory(project)}/config")
-      }
-      testProject.tasks.named("startTomcat").configure {
-         dependsOn(createPipelineConfigTask)
-      }
+         })
+         task.destinationDir = new File("${ServerDeployExtension.getServerDeployDirectory(project)}/config")
+   }
+   testProject.tasks.named("startTomcat").configure {
+      dependsOn(createPipelineConfigTask)
    }
 }
