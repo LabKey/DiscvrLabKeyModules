@@ -39,7 +39,7 @@ if (project.findProject(BuildUtils.getTestProjectPath(project.gradle)) != null &
          task.group = GroupNames.TEST_SERVER
          task.description = "Create pipeline configs for running tests on the test server"
          task.from project.file("test/configs")
-         task.include "pipelinConfig.xml"
+         task.include "pipelineConfig.xml"
          task.filter({ String line ->
             Matcher matcher = PropertiesUtils.PROPERTY_PATTERN.matcher(line)
             def extension = testProject.extensions.findByType(TeamCityExtension.class)
