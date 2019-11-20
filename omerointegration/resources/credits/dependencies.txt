@@ -1,2 +1,0 @@
-# direct external dependencies for project :server:modules:DiscvrLabKeyModules:omerointegration
-blitz-5.2.8-ice35-b57.jar
