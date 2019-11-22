@@ -1405,6 +1405,8 @@ public class SequenceIntegrationTests
 
             expectedOutputs.add(new File(basedir, outDir + "/Alignment/" + rs.getName() + ".bam.bai"));
 
+            expectedOutputs.add(new File(basedir, outDir + "/Alignment/idxstats.txt"));
+
             validateInputs();
             verifyFileOutputs(basedir, expectedOutputs);
             validateAlignment(bam, aligned, unaligned);
