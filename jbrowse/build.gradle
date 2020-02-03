@@ -8,9 +8,9 @@ repositories {
 }
 
 dependencies {
-   BuildUtils.addLabKeyDependency(project: project, config: "compile", depProjectPath: ":server:modules:LabDevKitModules:LDK", depProjectConfig: "apiCompile")
-   BuildUtils.addLabKeyDependency(project: project, config: "compile", depProjectPath: ":server:modules:DiscvrLabKeyModules:SequenceAnalysis", depProjectConfig: "apiCompile")
-   BuildUtils.addLabKeyDependency(project: project, config: "compile", depProjectPath: ":server:modules:LabDevKitModules:laboratory", depProjectConfig: "apiCompile")
+   BuildUtils.addLabKeyDependency(project: project, config: "implementation", depProjectPath: ":server:modules:LabDevKitModules:LDK", depProjectConfig: "apiCompile")
+   BuildUtils.addLabKeyDependency(project: project, config: "implementation", depProjectPath: ":server:modules:DiscvrLabKeyModules:SequenceAnalysis", depProjectConfig: "apiCompile")
+   BuildUtils.addLabKeyDependency(project: project, config: "implementation", depProjectPath: ":server:modules:LabDevKitModules:laboratory", depProjectConfig: "apiCompile")
 }
 
 project.task("copyJBrowse",
