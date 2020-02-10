@@ -15,7 +15,7 @@ repositories {
 }
 
 dependencies {
-   apiImplementation "com.github.samtools:htsjdk:${htsjdkVersion}"
+   apiCompile "com.github.samtools:htsjdk:${htsjdkVersion}"
    external "com.github.samtools:htsjdk:${htsjdkVersion}"
    BuildUtils.addLabKeyDependency(project: project, config: "implementation", depProjectPath: ":server:modules:LabDevKitModules:laboratory", depProjectConfig: "apiCompile")
    BuildUtils.addLabKeyDependency(project: project, config: "implementation", depProjectPath: ":server:modules:LabDevKitModules:LDK", depProjectConfig: "apiCompile")
