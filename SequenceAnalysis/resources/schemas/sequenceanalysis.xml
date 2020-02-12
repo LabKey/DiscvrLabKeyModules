@@ -1000,6 +1000,7 @@
         <columns>
             <column columnName="rowid">
                 <isAutoInc>true</isAutoInc>
+                <shownInDetailsView>false</shownInDetailsView>
                 <shownInInsertView>false</shownInInsertView>
                 <shownInUpdateView>false</shownInUpdateView>
                 <isUserEditable>false</isUserEditable>
