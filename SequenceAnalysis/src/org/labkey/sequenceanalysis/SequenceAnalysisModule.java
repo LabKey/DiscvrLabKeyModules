@@ -39,29 +39,12 @@ import org.labkey.api.sequenceanalysis.pipeline.SequencePipelineService;
 import org.labkey.api.util.PageFlowUtil;
 import org.labkey.api.util.SystemMaintenance;
 import org.labkey.api.view.WebPartFactory;
-import org.labkey.sequenceanalysis.analysis.BamCleanupHandler;
-import org.labkey.sequenceanalysis.analysis.BamHaplotypeHandler;
-import org.labkey.sequenceanalysis.analysis.CellHashingHandler;
-import org.labkey.sequenceanalysis.analysis.CellRangerAggrHandler;
-import org.labkey.sequenceanalysis.analysis.CellRangerRawDataHandler;
-import org.labkey.sequenceanalysis.analysis.CellRangerReanalysisHandler;
-import org.labkey.sequenceanalysis.analysis.CombineStarGeneCountsHandler;
-import org.labkey.sequenceanalysis.analysis.CombineSubreadGeneCountsHandler;
-import org.labkey.sequenceanalysis.analysis.GenotypeGVCFHandler;
-import org.labkey.sequenceanalysis.analysis.HaplotypeCallerHandler;
-import org.labkey.sequenceanalysis.analysis.LiftoverHandler;
-import org.labkey.sequenceanalysis.analysis.ListVcfSamplesHandler;
-import org.labkey.sequenceanalysis.analysis.MultiQCBamHandler;
-import org.labkey.sequenceanalysis.analysis.MultiQCHandler;
-import org.labkey.sequenceanalysis.analysis.PicardAlignmentMetricsHandler;
-import org.labkey.sequenceanalysis.analysis.RecalculateSequenceMetricsHandler;
-import org.labkey.sequenceanalysis.analysis.RnaSeqcHandler;
-import org.labkey.sequenceanalysis.analysis.SbtGeneCountHandler;
-import org.labkey.sequenceanalysis.analysis.UnmappedSequenceBasedGenotypeHandler;
+import org.labkey.sequenceanalysis.analysis.*;
 import org.labkey.sequenceanalysis.button.AddSraRunButton;
 import org.labkey.sequenceanalysis.button.CellHashingButton;
 import org.labkey.sequenceanalysis.button.ChangeReadsetStatusButton;
 import org.labkey.sequenceanalysis.button.ChangeReadsetStatusForAnalysesButton;
+import org.labkey.sequenceanalysis.button.CiteSeqButton;
 import org.labkey.sequenceanalysis.button.ReprocessLibraryButton;
 import org.labkey.sequenceanalysis.button.RunMultiQCButton;
 import org.labkey.sequenceanalysis.pipeline.AlignmentAnalysisJob;
@@ -339,6 +322,7 @@ public class SequenceAnalysisModule extends ExtendedSimpleModule
 
         SequenceAnalysisService.get().registerReadsetHandler(new MultiQCHandler());
         SequenceAnalysisService.get().registerReadsetHandler(new CellHashingHandler());
+        SequenceAnalysisService.get().registerReadsetHandler(new CiteSeqHandler());
 
         //ObjectFactory.Registry.register(AnalysisModelImpl.class, new UnderscoreBeanObjectFactory(AnalysisModelImpl.class));
         //ObjectFactory.Registry.register(SequenceReadsetImpl.class, new UnderscoreBeanObjectFactory(SequenceReadsetImpl.class));
@@ -382,6 +366,7 @@ public class SequenceAnalysisModule extends ExtendedSimpleModule
         LDKService.get().registerQueryButton(new AddSraRunButton(), SequenceAnalysisSchema.SCHEMA_NAME, SequenceAnalysisSchema.TABLE_READSETS);
         LDKService.get().registerQueryButton(new RunMultiQCButton(), SequenceAnalysisSchema.SCHEMA_NAME, SequenceAnalysisSchema.TABLE_READSETS);
         LDKService.get().registerQueryButton(new CellHashingButton(), SequenceAnalysisSchema.SCHEMA_NAME, SequenceAnalysisSchema.TABLE_READSETS);
+        LDKService.get().registerQueryButton(new CiteSeqButton(), SequenceAnalysisSchema.SCHEMA_NAME, SequenceAnalysisSchema.TABLE_READSETS);
 
         LDKService.get().registerQueryButton(new ChangeReadsetStatusForAnalysesButton(), "sequenceanalysis", "sequence_analyses");
         LDKService.get().registerQueryButton(new ChangeReadsetStatusButton(), "sequenceanalysis", "sequence_readsets");
@@ -438,7 +423,8 @@ public class SequenceAnalysisModule extends ExtendedSimpleModule
             //SequenceIntegrationTests.SequenceAnalysisPipelineTestCase3.class,
             SequenceIntegrationTests.SequenceAnalysisPipelineTestCase1.class,
             SequenceIntegrationTests.SequenceAnalysisPipelineTestCase2.class,
-            OutputIntegrationTests.VariantProcessingTest.class
+            OutputIntegrationTests.VariantProcessingTest.class,
+            SequenceRemoteIntegrationTests.class
         ));
 
         return testClasses;

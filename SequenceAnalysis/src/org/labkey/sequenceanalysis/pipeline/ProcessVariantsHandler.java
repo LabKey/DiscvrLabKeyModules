@@ -1,10 +1,8 @@
 package org.labkey.sequenceanalysis.pipeline;
 
-import htsjdk.samtools.SAMSequenceDictionary;
 import htsjdk.samtools.util.Interval;
 import htsjdk.tribble.AbstractFeatureReader;
 import htsjdk.tribble.FeatureReader;
-import htsjdk.variant.utils.SAMSequenceDictionaryExtractor;
 import htsjdk.variant.vcf.VCFCodec;
 import htsjdk.variant.vcf.VCFFileReader;
 import htsjdk.variant.vcf.VCFHeader;
@@ -38,6 +36,7 @@ import org.labkey.api.sequenceanalysis.pipeline.VariantProcessingStep;
 import org.labkey.api.sequenceanalysis.run.SimpleScriptWrapper;
 import org.labkey.api.util.FileType;
 import org.labkey.api.util.FileUtil;
+import org.labkey.api.util.URIUtil;
 import org.labkey.api.view.ActionURL;
 import org.labkey.api.writer.PrintWriters;
 import org.labkey.sequenceanalysis.SequenceAnalysisModule;
@@ -383,6 +382,8 @@ public class ProcessVariantsHandler implements SequenceOutputHandler<SequenceOut
 
         for (PipelineStepCtx<VariantProcessingStep> stepCtx : providers)
         {
+            ctx.getLogger().info("Starting to run: " + stepCtx.getProvider().getLabel());
+
             ctx.getJob().setStatus(PipelineJob.TaskStatus.running, "Running: " + stepCtx.getProvider().getLabel());
             stepIdx++;
 
@@ -403,8 +404,15 @@ public class ProcessVariantsHandler implements SequenceOutputHandler<SequenceOut
                 action.addInput(vcfIdx, "Input VCF Index");
             }
 
-            resumer.getFileManager().addIntermediateFile(currentVCF);
-            resumer.getFileManager().addIntermediateFile(vcfIdx);
+            if (!URIUtil.isDescendant(ctx.getOutputDir().toURI(), currentVCF.toURI()))
+            {
+                ctx.getLogger().info("VCF is not a descendent of the output directory, will not add as intermediate file: " + currentVCF.getPath());
+            }
+            else
+            {
+                resumer.getFileManager().addIntermediateFile(currentVCF);
+                resumer.getFileManager().addIntermediateFile(vcfIdx);
+            }
 
             ReferenceGenome genome = ctx.getSequenceSupport().getCachedGenome(libraryId);
             action.addInput(genome.getSourceFastaFile(), "Reference FASTA");

@@ -22,9 +22,11 @@ import org.jetbrains.annotations.Nullable;
 import org.labkey.api.data.Container;
 import org.labkey.api.data.ContainerManager;
 import org.labkey.api.data.DbSchema;
+import org.labkey.api.data.DbSchemaType;
 import org.labkey.api.data.Table;
 import org.labkey.api.data.TableInfo;
 import org.labkey.api.data.TableSelector;
+import org.labkey.api.data.Transient;
 import org.labkey.api.exp.api.DataType;
 import org.labkey.api.exp.api.ExpData;
 import org.labkey.api.exp.api.ExperimentService;
@@ -92,7 +94,7 @@ public class RefNtSequenceModel implements Serializable
 
     public static RefNtSequenceModel getForRowId(int rowId)
     {
-        return new TableSelector(DbSchema.get("sequenceanalysis").getTable("ref_nt_sequences")).getObject(rowId, RefNtSequenceModel.class);
+        return new TableSelector(DbSchema.get("sequenceanalysis", DbSchemaType.Module).getTable("ref_nt_sequences")).getObject(rowId, RefNtSequenceModel.class);
     }
 
     public int getRowid()
@@ -115,8 +117,8 @@ public class RefNtSequenceModel implements Serializable
         _name = name;
     }
 
-    public @Nullable
-    InputStream getSequenceInputStream() throws IOException
+    @Nullable @Transient
+    public InputStream getSequenceInputStream() throws IOException
     {
         if (_sequenceFile != null)
         {
@@ -149,6 +151,7 @@ public class RefNtSequenceModel implements Serializable
         return _sequence;
     }
 
+    @Transient
     public String getSequence()
     {
         //resolve from cached file
@@ -387,6 +390,7 @@ public class RefNtSequenceModel implements Serializable
         _disabledby = disabledby;
     }
 
+    @Transient
     public byte[] getSequenceBases()
     {
         if (_sequenceBytes == null)
@@ -429,7 +433,7 @@ public class RefNtSequenceModel implements Serializable
         setSeqLength(sequence.length());
         setSequenceFile(d.getRowId());
 
-        TableInfo ti = DbSchema.get("sequenceanalysis").getTable("ref_nt_sequences");
+        TableInfo ti = DbSchema.get("sequenceanalysis", DbSchemaType.Module).getTable("ref_nt_sequences");
 
         Table.update(u, ti, this, _rowid);
     }

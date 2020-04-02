@@ -74,6 +74,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -233,6 +234,10 @@ public class SequenceIntegrationTests
             if (project == null)
             {
                 project = ContainerManager.createContainer(ContainerManager.getRoot(), projectName);
+
+                //disable search so we dont get conflicts when deleting folder quickly
+                ContainerManager.updateSearchable(project, false, TestContext.get().getUser());
+
                 Set<Module> modules = new HashSet<>();
                 modules.addAll(project.getActiveModules());
                 modules.add(ModuleLoader.getInstance().getModule(SequenceAnalysisModule.NAME));
@@ -248,10 +253,6 @@ public class SequenceIntegrationTests
         {
             _context = TestContext.get();
             _sampleData = getSampleDataDir();
-            if (_sampleData == null || !_sampleData.exists())
-            {
-                throw new Exception("sampledata folder does not exist: " + _sampleData.getPath());
-            }
 
             _project = ContainerManager.getForPath(getProjectName());
             _pipelineRoot = PipelineService.get().getPipelineRootSetting(_project).getRootPath();
@@ -273,14 +274,14 @@ public class SequenceIntegrationTests
             }
         }
 
-        private File getSampleDataDir()
+        private File getSampleDataDir() throws Exception
         {
             Module module = ModuleLoader.getInstance().getModule(SequenceAnalysisModule.class);
-            DirectoryResource resource = (DirectoryResource)module.getModuleResolver().lookup(Path.parse("sampledata"));
+            DirectoryResource resource = (DirectoryResource) module.getModuleResolver().lookup(Path.parse("sampledata"));
             File file = null;
             for (Resource r : resource.list())
             {
-                if(r instanceof FileResource)
+                if (r instanceof FileResource)
                 {
                     file = ((FileResource) r).getFile().getParentFile();
                     break;
@@ -290,6 +291,11 @@ public class SequenceIntegrationTests
             if (file == null || !file.exists())
             {
                 _log.error("unable to find sampledata directory");
+            }
+
+            if (file == null || !file.exists())
+            {
+                throw new Exception("sampledata folder does not exist: " + (file == null ? "null" : file.getPath()));
             }
 
             return file;
@@ -357,7 +363,7 @@ public class SequenceIntegrationTests
         {
             //decompress and remove trailing /1 from readnames, as these
             FastqWriterFactory fact = new FastqWriterFactory();
-            try (FastqReader reader = new FastqReader(input);FastqWriter writer = fact.newWriter(output))
+            try (FastqReader reader = new FastqReader(input); FastqWriter writer = fact.newWriter(output))
             {
                 while (reader.hasNext())
                 {
@@ -413,12 +419,15 @@ public class SequenceIntegrationTests
 
         protected void verifyFileOutputs(File basedir, Set<File> expectedOutputs)
         {
-            IOFileFilter filter = new IOFileFilter(){
-                public boolean accept(File file){
+            IOFileFilter filter = new IOFileFilter()
+            {
+                public boolean accept(File file)
+                {
                     return true;
                 }
 
-                public boolean accept(File dir, String name){
+                public boolean accept(File dir, String name)
+                {
                     return true;
                 }
             };
@@ -490,7 +499,7 @@ public class SequenceIntegrationTests
             assert guidList.length() >= 1;
 
             Set<PipelineJob> ret = new HashSet<>();
-            for (int i=0;i<guidList.length();i++)
+            for (int i = 0; i < guidList.length(); i++)
             {
                 ret.add(PipelineJobService.get().getJobStore().getJob(guidList.getString(i)));
             }
@@ -584,20 +593,7 @@ public class SequenceIntegrationTests
                 //on failure, append contents of pipeline job file to primary error log
                 if (job.getLogFile() != null)
                 {
-                    StringBuilder sb = new StringBuilder();
-                    try (BufferedReader reader = Readers.getReader(job.getLogFile()))
-                    {
-                        sb.append("*******************\n");
-                        sb.append("Error running sequence junit tests.  Pipeline log:\n");
-                        String line;
-                        while ((line = reader.readLine()) != null) {
-                            sb.append(line).append('\n');
-                        }
-
-                        sb.append("*******************\n");
-                    }
-
-                    _log.error(sb.toString());
+                    writeJobLogToLog(job);
                 }
                 else
                 {
@@ -610,9 +606,27 @@ public class SequenceIntegrationTests
             return false; //job != null && job.getActiveTaskId() != null;
         }
 
+        protected void writeJobLogToLog(PipelineJob job) throws IOException
+        {
+            StringBuilder sb = new StringBuilder();
+            try (BufferedReader reader = Readers.getReader(job.getLogFile()))
+            {
+                sb.append("*******************\n");
+                sb.append("Error running sequence junit tests.  Pipeline log:\n");
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    sb.append(line).append('\n');
+                }
+
+                sb.append("*******************\n");
+            }
+
+            _log.error(sb.toString());
+        }
+
         protected JSONObject substituteParams(File xml, String jobName) throws IOException
         {
-            String content = FileUtils.readFileToString(xml);
+            String content = FileUtils.readFileToString(xml, Charset.defaultCharset());
             content = content.replaceAll("@@BASEURL@@", AppProps.getInstance().getBaseServerUrl() + AppProps.getInstance().getContextPath());
             content = content.replaceAll("@@CONTAINERID@@", _project.getPath());
             content = content.replaceAll("@@CONTAINERPATH@@", _project.getPath());
@@ -683,12 +697,12 @@ public class SequenceIntegrationTests
             Container project = ContainerManager.getForPath(projectName);
             if (project != null)
             {
-                File _pipelineRoot = PipelineService.get().getPipelineRootSetting(project).getRootPath();
+                File pipelineRoot = PipelineService.get().getPipelineRootSetting(project).getRootPath();
                 try
                 {
-                    if (_pipelineRoot.exists())
+                    if (pipelineRoot.exists())
                     {
-                        File[] contents = _pipelineRoot.listFiles();
+                        File[] contents = pipelineRoot.listFiles();
                         for (File f : contents)
                         {
                             if (f.exists())
@@ -1439,10 +1453,10 @@ public class SequenceIntegrationTests
         @Override
         public void setUp() throws Exception
         {
+            super.setUp();
+
             if (isExternalPipelineEnabled())
             {
-                super.setUp();
-
                 if (!_hasPerformedSetup)
                 {
                     copyInputFiles();
@@ -3130,7 +3144,7 @@ public class SequenceIntegrationTests
 
     public static void ensureSivMac239Sequence(Container c, Logger log) throws IOException
     {
-        TableInfo ti = QueryService.get().getUserSchema(TestContext.get().getUser(), c, SequenceAnalysisSchema.SCHEMA_NAME).getTable(SequenceAnalysisSchema.TABLE_REF_NT_SEQUENCES);
+        TableInfo ti = QueryService.get().getUserSchema(TestContext.get().getUser(), c, SequenceAnalysisSchema.SCHEMA_NAME).getTable(SequenceAnalysisSchema.TABLE_REF_NT_SEQUENCES, null);
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("name"), "SIVmac239_Test");
         //note: dont use container filter so this could include /shared
         //filter.addCondition(FieldKey.fromString("container"), c.getId());
