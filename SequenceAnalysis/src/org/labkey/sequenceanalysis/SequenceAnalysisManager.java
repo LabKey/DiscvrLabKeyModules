@@ -522,8 +522,8 @@ public class SequenceAnalysisManager
         }
     }
 
-    private static final String htsjdkVersion = "2.14.3";
-    private static final String picardVersion = "2.18.4";
+    private static final String htsjdkVersion = "2.21.3";
+    private static final String picardVersion = "2.22.4";
 
     public static File getHtsJdkJar()
     {
