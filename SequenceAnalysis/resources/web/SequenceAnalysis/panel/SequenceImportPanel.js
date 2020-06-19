@@ -214,7 +214,7 @@ Ext4.define('SequenceAnalysis.panel.SequenceImportPanel', {
                 html: 'The purpose of this import process is to normalize the sequence data into a common format (FASTQ), create one file per sample, and capture sample metadata (name, sample type, subject name, etc).  Reads are organized into readsets.  ' +
                         'Each readset is roughly equals to one input file (or 2 for pair-end data), and it connects the sequences in this file with sample attributes, such as subject name, sample type, platform, etc.'
             },{
-                html: '<h4><a href="https://github.com/BimberLab/discvr-seq/wiki/Sequence-Management" target="_blank">Click here for more detailed instructions</a></h4>'
+                html: '<h4><a href="https://github.com/BimberLab/discvr-seq/wiki/Sequence-Management" target="_blank" rel="noopener noreferrer">Click here for more detailed instructions</a></h4>'
             }]
         }, this.getRunInfoCfg(), this.getFilePanelCfg(),{
             xtype:'panel',
@@ -1083,7 +1083,7 @@ Ext4.define('SequenceAnalysis.panel.SequenceImportPanel', {
             width: '100%',
             title: 'Step 2: File/Lane Groups',
             items: [{
-                html: 'In this step you tell the system how your sequence files go together.  The most common scenarios are either one file per group (single end data), or a pair of files per group (paired end).  However, in some cases a single library is spread across multiple lanes or the sequencer produced multiple files per lane, in which case you have more than 2 files of reads per group.  Why does this matter?  This information can be important for proper sample processing, such as marking PCR duplicates.  <a target="_blank" href="https://www.broadinstitute.org/gatk/guide/article?id=3059">Click here to view a good explanation from GATK</a>.  For the purposes of this system, each group of files is given an identifier (typically inferred from the filename).<br><br>NOTE: this will auto-populate with a best guess of how to group the files.  Most of this should be correct and you can proceed to step 3 without doing anything else.',
+                html: 'In this step you tell the system how your sequence files go together.  The most common scenarios are either one file per group (single end data), or a pair of files per group (paired end).  However, in some cases a single library is spread across multiple lanes or the sequencer produced multiple files per lane, in which case you have more than 2 files of reads per group.  Why does this matter?  This information can be important for proper sample processing, such as marking PCR duplicates.  <a target="_blank" href="https://www.broadinstitute.org/gatk/guide/article?id=3059" rel="noopener noreferrer">Click here to view a good explanation from GATK</a>.  For the purposes of this system, each group of files is given an identifier (typically inferred from the filename).<br><br>NOTE: this will auto-populate with a best guess of how to group the files.  Most of this should be correct and you can proceed to step 3 without doing anything else.',
                 style: 'padding-bottom: 10px;',
                 border: false
             },{

@@ -8,7 +8,7 @@ Ext4.define('SequenceAnalysis.panel.GenotypeFilterPanel', {
 			width: '100%',
 			border: false,
 			items: [{
-				html: 'Genotype filtering is a more advanced GATK feature; however, we have tried to simplify the more common filters.  It uses <a href="https://software.broadinstitute.org/gatk/guide/article?id=1255" target="_blank">JEXL syntax</a> to filter individual genotypes based on thresholds.  Should you include more advanced expressions, be aware that this tool does very little checking on the validity of those filters.',
+				html: 'Genotype filtering is a more advanced GATK feature; however, we have tried to simplify the more common filters.  It uses <a href="https://software.broadinstitute.org/gatk/guide/article?id=1255" target="_blank" rel="noopener noreferrer">JEXL syntax</a> to filter individual genotypes based on thresholds.  Should you include more advanced expressions, be aware that this tool does very little checking on the validity of those filters.',
 				maxWidth: 1000,
 				border: false,
 				style: 'padding-bottom: 10px;'

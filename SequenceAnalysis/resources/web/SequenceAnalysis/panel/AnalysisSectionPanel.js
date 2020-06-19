@@ -216,7 +216,7 @@ Ext4.define('SequenceAnalysis.panel.AnalysisSectionPanel', {
                 xtype: 'displayfield',
                 fieldLabel: 'Website',
                 width: '100%',
-                value: '<a href="' + cfg.websiteURL + '" target="_blank">Click Here To View More About This Tool</a>',
+                value: '<a href="' + cfg.websiteURL + '" target="_blank" rel="noopener noreferrer">Click Here To View More About This Tool</a>',
                 border: false,
                 style: 'padding-bottom: 5px;'
             });
@@ -468,7 +468,7 @@ Ext4.define('SequenceAnalysis.panel.AnalysisSectionPanel', {
                 xtype: 'displayfield',
                 fieldLabel: 'Website',
                 width: '100%',
-                value: '<a href="' + cfg.websiteURL + '" target="_blank">Click Here To View More About This Tool</a>',
+                value: '<a href="' + cfg.websiteURL + '" target="_blank" rel="noopener noreferrer">Click Here To View More About This Tool</a>',
                 border: false,
                 style: 'padding-bottom: 5px;'
             });

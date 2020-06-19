@@ -313,7 +313,7 @@ define([
 
                         var ensemblUrl = this.config.ensemblUrl || 'www.ensembl.org';
                         var url = 'https://' + ensemblUrl + '/' + this.config.ensemblId +'/Location/View?db=core;r=' + pos;
-                        fmt('External Links', '<a href="' + url +'" target="_blank">View Region In Ensembl</a>', f);
+                        fmt('External Links', '<a href="' + url +'" target="_blank" rel="noopener noreferrer">View Region In Ensembl</a>', f);
                     }
 
                     //fmt( 'Length', Util.addCommas(f.get('end')-f.get('start'))+' bp',f );
