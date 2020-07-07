@@ -9,7 +9,8 @@ import htsjdk.samtools.SAMSequenceDictionary;
 import htsjdk.samtools.SAMSequenceRecord;
 import htsjdk.samtools.util.Interval;
 import htsjdk.variant.utils.SAMSequenceDictionaryExtractor;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 import org.junit.Assert;
@@ -306,7 +307,7 @@ public class VariantProcessingJob extends SequenceOutputHandlerJob
 
     public static class TestCase extends Assert
     {
-        private static final Logger _log = Logger.getLogger(SequenceAlignmentTask.TestCase.class);
+        private static final Logger _log = LogManager.getLogger(SequenceAlignmentTask.TestCase.class);
 
         @Test
         public void serializeTest() throws Exception
