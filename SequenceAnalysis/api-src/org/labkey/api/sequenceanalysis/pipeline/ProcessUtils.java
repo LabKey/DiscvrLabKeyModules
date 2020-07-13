@@ -1,7 +1,7 @@
 package org.labkey.api.sequenceanalysis.pipeline;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.log4j.Level;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.labkey.api.util.StringUtilsLabKey;
