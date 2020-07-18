@@ -99,8 +99,10 @@ public class AlignerIndexUtil
 
                             destination = wd.inputFile(webserverIndexDir, destination, true);
                             if (output != null && !destination.equals(webserverIndexDir))
+                            {
+                                ctx.getLogger().debug("adding deferred delete file: " + destination.getPath());
                                 output.addDeferredDeleteIntermediateFile(destination);
-
+                            }
                             ctx.getLogger().info("finished copying files");
                         }
                         else

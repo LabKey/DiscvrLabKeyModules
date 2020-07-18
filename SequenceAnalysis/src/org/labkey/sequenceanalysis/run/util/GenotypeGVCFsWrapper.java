@@ -81,7 +81,7 @@ public class GenotypeGVCFsWrapper extends AbstractGatk4Wrapper
         }
     }
 
-    private static FileType GVCF = new FileType(".g.vcf", FileType.gzSupportLevel.SUPPORT_GZ);
+    public static FileType GVCF = new FileType(Arrays.asList(".g.vcf", ".gvcf"), ".g.vcf", FileType.gzSupportLevel.SUPPORT_GZ);
 
     public static List<File> copyVcfsLocally(Collection<File> inputGVCFs, Collection<File> toDelete, File localWorkDir, Logger log, boolean isResume) throws PipelineJobException
     {
@@ -102,6 +102,8 @@ public class GenotypeGVCFsWrapper extends AbstractGatk4Wrapper
         {
             File origIdx = null;
             File movedIdx = null;
+            File doneFile = new File(f.getPath() + ".copyDone");
+
             if (GVCF.isType(f))
             {
                 origIdx = new File(f.getPath() + ".tbi");
@@ -120,6 +122,10 @@ public class GenotypeGVCFsWrapper extends AbstractGatk4Wrapper
                 {
                     log.debug("moved index exists, skipping file: " + f.getName());
                 }
+                else if (f.isDirectory() && doneFile.exists())
+                {
+                    log.debug("copied folder exists, skipping file: " + f.getName());
+                }
                 else
                 {
                     long size = f.isDirectory() ? FileUtils.sizeOfDirectory(f) : FileUtils.sizeOf(f);
@@ -133,6 +139,7 @@ public class GenotypeGVCFsWrapper extends AbstractGatk4Wrapper
                                 FileUtils.deleteDirectory(movedFile);
                             }
                             FileUtils.copyDirectory(f, movedFile);
+                            FileUtils.touch(doneFile);
                         }
                         else
                         {
@@ -156,6 +163,10 @@ public class GenotypeGVCFsWrapper extends AbstractGatk4Wrapper
 
             toDelete.add(movedFile);
             toDelete.add(movedIdx);
+            if (doneFile.exists())
+            {
+                toDelete.add(doneFile);
+            }
 
             vcfsToProcess.add(movedFile);
         }

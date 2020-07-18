@@ -5,6 +5,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
+import org.labkey.api.pipeline.PipelineJob;
 import org.labkey.api.pipeline.PipelineJobException;
 import org.labkey.api.sequenceanalysis.SequenceAnalysisService;
 import org.labkey.api.sequenceanalysis.pipeline.AbstractPipelineStepProvider;
@@ -38,7 +39,7 @@ public class PrintReadsContainingStep extends AbstractCommandPipelineStep<PrintR
             super("PrintReadsContaining", "Filter Reads By Sequence Motifs", "PrintReadsContaining", "This step filters input reads and will output only reads containing the provided sequence(s).", Arrays.asList(
                     ToolParameterDescriptor.createCommandLineParam(CommandLineParam.createSwitch("--matchAllExpressions"), "matchAllExpressions", "Match All Expressions", "If checked, the sequence must match all expressions.", "checkbox", null, false),
                     ToolParameterDescriptor.createCommandLineParam(CommandLineParam.create("--editDistance"), "editDistance", "Edit Distance", "If provided, the tool will perform fuzzy matching, allowing hits with up to this many mismatches.  Be aware, if this is used, the query expression must be bases (ATCG) only.", "ldk-integerfield", null, null),
-                    ToolParameterDescriptor.create("readExpressions", "Read Expressions (both)", "The list of expressions to test, one per line.  Expressions can be simple strings or a java regular expression.  The default is to retain a read pair matching any of these.", "sequenceanalysis-trimmingtextarea", new JSONObject(){{
+                    ToolParameterDescriptor.create("readExpressions", "Read Expressions (either)", "The list of expressions to test, one per line.  Expressions can be simple strings or a java regular expression.  The default is to retain a read pair where either reads matches at least one of these.", "sequenceanalysis-trimmingtextarea", new JSONObject(){{
                         put("replaceAllWhitespace", false);
                         put("width", 400);
                     }}, null),
@@ -98,6 +99,7 @@ public class PrintReadsContainingStep extends AbstractCommandPipelineStep<PrintR
         Pair<File, File> outputs = getWrapper().execute(inputFile, inputFile2, output1, output2, extraArgs);
         if (!SequencePipelineService.get().hasMinLineCount(outputs.first, 4))
         {
+            getPipelineCtx().getJob().setStatus(PipelineJob.TaskStatus.error, "No passing reads were found");
             throw new PipelineJobException("No passing reads were found: " + inputFile.getPath());
         }
 
