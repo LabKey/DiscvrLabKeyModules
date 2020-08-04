@@ -321,10 +321,10 @@ public class SequenceAnalysisController extends SpringActionController
             }
         }
 
-        public NavTree appendNavTrail(NavTree root)
+        @Override
+        public void addNavTrail(NavTree root)
         {
             root.addChild("FastQC Report"); //necessary to set page title, it seems
-            return root;
         }
     }
 
@@ -336,9 +336,10 @@ public class SequenceAnalysisController extends SpringActionController
             super("views/sequenceAnalysis.html");
         }
 
-        public NavTree appendNavTrail(NavTree tree)
+        @Override
+        public void addNavTrail(NavTree tree)
         {
-            return tree.addChild("Sequence Analysis");
+            tree.addChild("Sequence Analysis");
         }
     }
 
@@ -351,9 +352,9 @@ public class SequenceAnalysisController extends SpringActionController
         }
 
         @Override
-        public NavTree appendNavTrail(NavTree tree)
+        public void addNavTrail(NavTree tree)
         {
-            return tree.addChild("1".equals(getViewContext().getActionURL().getParameter("showGenotypeGVCFs")) ? "Genotype gVCFs" : "Filter/Process Variants");
+            tree.addChild("1".equals(getViewContext().getActionURL().getParameter("showGenotypeGVCFs")) ? "Genotype gVCFs" : "Filter/Process Variants");
         }
     }
 
@@ -366,9 +367,9 @@ public class SequenceAnalysisController extends SpringActionController
         }
 
         @Override
-        public NavTree appendNavTrail(NavTree tree)
+        public void addNavTrail(NavTree tree)
         {
-            return tree.addChild("Import Alignments");
+            tree.addChild("Import Alignments");
         }
     }
 
@@ -418,9 +419,9 @@ public class SequenceAnalysisController extends SpringActionController
             super("views/alignmentAnalysis.html");
         }
 
-        public NavTree appendNavTrail(NavTree tree)
+        public void addNavTrail(NavTree tree)
         {
-            return tree.addChild("Analyze Alignments");
+            tree.addChild("Analyze Alignments");
         }
     }
 
