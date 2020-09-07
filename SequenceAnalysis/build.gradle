@@ -31,6 +31,7 @@ dependencies {
       exclude group: "org.apache.commons", module: "commons-collections4"
    }
 
+   external "commons-net:commons-net:${commonsNetVersion}"
    BuildUtils.addLabKeyDependency(project: project, config: "modules", depProjectPath: ":server:modules:LabDevKitModules:laboratory", depProjectConfig: "published", depExtension: "module")
    BuildUtils.addLabKeyDependency(project: project, config: "modules", depProjectPath: ":server:modules:LabDevKitModules:LDK", depProjectConfig: "published", depExtension: "module")
 }
