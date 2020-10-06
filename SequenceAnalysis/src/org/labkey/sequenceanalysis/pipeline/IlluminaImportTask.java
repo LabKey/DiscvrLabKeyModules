@@ -253,7 +253,14 @@ public class IlluminaImportTask extends WorkDirectoryTask<IlluminaImportTask.Fac
                     getJob().getLogger().info("Updated readset: " + readsetId);
 
                     getJob().getLogger().debug("creating readdata");
-                    Table.insert(getJob().getUser(), readDataTable, rd);
+                    if (rd.getFileId1() == null)
+                    {
+                        getJob().getLogger().warn("no files associated with ReadData, skipping import");
+                    }
+                    else
+                    {
+                        Table.insert(getJob().getUser(), readDataTable, rd);
+                    }
                 }
                 catch (OptimisticConflictException e)
                 {
