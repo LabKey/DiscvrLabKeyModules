@@ -7,8 +7,7 @@ repositories {
 
 //excludes based on: https://github.com/glencoesoftware/omero-ms-core/blob/master/build.gradle
 dependencies {
-   external (group: 'org.openmicroscopy', name: 'omero-gateway', version: '5.6.3')
-   external (group: 'org.openmicroscopy', name: 'omero-blitz', version: '5.5.6') {
+   external (group: 'org.openmicroscopy', name: 'omero-gateway', version: '5.6.3') {
       exclude group: 'OME'
       exclude group: 'antlr'
       exclude group: 'asm'
