@@ -3,14 +3,12 @@ import org.labkey.gradle.util.BuildUtils;
 repositories {
    mavenLocal()
    mavenCentral()
-   maven {
-      url 'https://artifacts.openmicroscopy.org/artifactory/maven/'
-   }
 }
 
 //excludes based on: https://github.com/glencoesoftware/omero-ms-core/blob/master/build.gradle
 dependencies {
-   external (group: 'omero', name: 'blitz', version: '5.5.0-m2-ice36-b103') {
+   external (group: 'org.openmicroscopy', name: 'omero-gateway', version: '5.6.3')
+   external (group: 'org.openmicroscopy', name: 'omero-blitz', version: '5.5.6') {
       exclude group: 'OME'
       exclude group: 'antlr'
       exclude group: 'asm'
