@@ -80,20 +80,22 @@ public class ReferenceGenomeManager
             return;
         }
 
+        File localCacheDir = SequencePipelineService.get().getRemoteGenomeCacheDirectory();
         if (isUpToDate(genome))
         {
             log.debug("Genome up-to-date, will not repeat rsync");
+            genome.setWorkingFasta(new File(new File(localCacheDir, genome.getGenomeId().toString()), genome.getSourceFastaFile().getName()));
+
             return;
         }
 
-        File localCacheDir = SequencePipelineService.get().getRemoteGenomeCacheDirectory();
         log.info("attempting to rsync genome to local disks: " + localCacheDir.getPath());
 
         File sourceDir = genome.getSourceFastaFile().getParentFile();
 
         //Note: neither source nor dest have trailing slashes, so the entire source (i.e '128', gets synced into a subdir of dest)
         new SimpleScriptWrapper(log).execute(Arrays.asList(
-                "rsync", "-r", "-a", "--delete", "--delete-excluded", "--no-owner", "--no-group", sourceDir.getPath(), localCacheDir.getPath()
+                "rsync", "-r", "-a", "--delete", "--no-owner", "--no-group", sourceDir.getPath(), localCacheDir.getPath()
         ));
 
         try
