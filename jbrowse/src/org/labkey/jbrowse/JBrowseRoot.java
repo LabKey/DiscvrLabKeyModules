@@ -141,7 +141,7 @@ public class JBrowseRoot
 
     private String getPerlLocation()
     {
-        LabKeyScriptEngineManager svc = ServiceRegistry.get().getService(LabKeyScriptEngineManager.class);
+        LabKeyScriptEngineManager svc = LabKeyScriptEngineManager.get();
         for (ExternalScriptEngineDefinition def : svc.getEngineDefinitions())
         {
             if (def.getExtensions() != null && Arrays.stream(def.getExtensions()).anyMatch("pl"::equals))
