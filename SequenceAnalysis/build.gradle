@@ -58,6 +58,7 @@ dependencies {
                     'Java framework for processing biological data'
             ),
             {
+                // Exclude activation jars from webapp to avoid classloader conflicts with <tomcat>/lib/javax.activation.jar
                 exclude group: 'jakarta.activation', module: 'jakarta.activation-api'
                 exclude group: 'com.sun.activation', module: 'jakarta.activation'
             }
@@ -75,6 +76,7 @@ dependencies {
                     'Java framework for processing biological data'
             ),
             {
+                // Exclude activation jars from webapp to avoid classloader conflicts with <tomcat>/lib/javax.activation.jar
                 exclude group: 'jakarta.activation', module: 'jakarta.activation-api'
                 exclude group: 'com.sun.activation', module: 'jakarta.activation'
             }
