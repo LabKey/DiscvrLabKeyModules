@@ -870,10 +870,11 @@ then
       install ./cutadapt-1.8.1/bin/_preamble.py ${LKTOOLS_DIR}/_preamble.py
       cp -R ./cutadapt-1.8.1/cutadapt ${LKTOOLS_DIR}/cutadapt
     else
-      CUTADAPT_BRANCH=v4.0
-      $PIP_EXE install --target ${LKTOOLS_DIR}/cutadapt_pip git+https://github.com/marcelm/cutadapt.git@${CUTADAPT_BRANCH}
-      cd ${LKTOOLS_DIR}
-      ln -s ./cutadapt_pip/bin/cutadapt cutadapt
+      $PIP_EXE install --user cutadapt
+      $PIP_EXE show cutadapt
+      which cutadapt
+      #cd ${LKTOOLS_DIR}
+      #ln -s ./cutadapt_pip/bin/cutadapt cutadapt
     fi
 else
     echo "Already installed"
