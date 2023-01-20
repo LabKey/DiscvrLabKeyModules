@@ -870,8 +870,9 @@ then
       install ./cutadapt-1.8.1/bin/_preamble.py ${LKTOOLS_DIR}/_preamble.py
       cp -R ./cutadapt-1.8.1/cutadapt ${LKTOOLS_DIR}/cutadapt
     else
-      $PIP_EXE install --user cutadapt pyinstaller
+      $PIP_EXE install --user cutadapt
       $PIP_EXE show cutadapt
+      $PIP_EXE install --user pyinstaller
       python3 -m pyinstaller --onefile --clean ~/.local/bin/cutadapt
       cp ./dist/cutadapt ${LKTOOLS_DIR}/cutadapt
     fi
