@@ -873,7 +873,8 @@ then
       $PIP_EXE install --user cutadapt
       $PIP_EXE show cutadapt
       $PIP_EXE install --user pyinstaller
-      python3 -m pyinstaller --onefile --clean ~/.local/bin/cutadapt
+      $PIP_EXE show pyinstaller
+      ~/.local/bin/pyinstaller --onefile --clean ~/.local/bin/cutadapt
       cp ./dist/cutadapt ${LKTOOLS_DIR}/cutadapt
     fi
 else
