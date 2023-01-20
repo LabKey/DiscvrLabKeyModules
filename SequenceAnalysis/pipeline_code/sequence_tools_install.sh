@@ -872,9 +872,7 @@ then
     else
       $PIP_EXE install --user cutadapt
       $PIP_EXE show cutadapt
-      which cutadapt
-      #cd ${LKTOOLS_DIR}
-      #ln -s ./cutadapt_pip/bin/cutadapt cutadapt
+      cp ~/.local/bin/cutadapt ${LKTOOLS_DIR}/cutadapt
     fi
 else
     echo "Already installed"
