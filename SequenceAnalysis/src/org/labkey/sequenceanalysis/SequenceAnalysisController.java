@@ -33,9 +33,9 @@ import org.biojava.nbio.core.sequence.io.FastaReader;
 import org.biojava.nbio.core.sequence.io.GenericFastaHeaderParser;
 import org.jetbrains.annotations.NotNull;
 import org.jfree.chart.JFreeChart;
-import org.json.old.JSONArray;
-import org.json.old.JSONException;
-import org.json.old.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.labkey.api.action.AbstractFileUploadAction;
 import org.labkey.api.action.ApiJsonWriter;
 import org.labkey.api.action.ApiResponse;
@@ -119,6 +119,7 @@ import org.labkey.api.util.ExceptionUtil;
 import org.labkey.api.util.FileType;
 import org.labkey.api.util.FileUtil;
 import org.labkey.api.util.HtmlString;
+import org.labkey.api.util.JsonUtil;
 import org.labkey.api.util.NetworkDrive;
 import org.labkey.api.util.PageFlowUtil;
 import org.labkey.api.util.Pair;
@@ -2090,7 +2091,7 @@ public class SequenceAnalysisController extends SpringActionController
 
         public JSONObject getJobParameters()
         {
-            return getJsonObject().optJSONObject("jobParameters");
+            return getNewJsonObject().optJSONObject("jobParameters");
         }
 
         public JSONArray getReadsetIds()
@@ -2118,9 +2119,9 @@ public class SequenceAnalysisController extends SpringActionController
             List<File> ret = new ArrayList<>();
             JSONArray inputFiles = getJobParameters().getJSONArray("inputFiles");
             String path = getJobParameters().optString("path");
-            for (JSONObject o : inputFiles.toJSONObjectArray())
+            for (JSONObject o : JsonUtil.toJSONObjectList(inputFiles))
             {
-                if (o.containsKey("dataId"))
+                if (o.has("dataId"))
                 {
                     ExpData d = ExperimentService.get().getExpData(o.getInt("dataId"));
                     if (d == null || d.getFile() == null)
@@ -2134,7 +2135,7 @@ public class SequenceAnalysisController extends SpringActionController
 
                     ret.add(d.getFile());
                 }
-                else if (o.containsKey("relPath") || o.containsKey("fileName"))
+                else if (o.has("relPath") || o.has("fileName"))
                 {
                     File f;
                     if (o.get("relPath") == null)
@@ -2161,7 +2162,7 @@ public class SequenceAnalysisController extends SpringActionController
 
                     ret.add(f);
                 }
-                else if (o.containsKey("filePath"))
+                else if (o.has("filePath"))
                 {
                     File f = new File(o.getString("filePath"));
                     if (!f.exists())
@@ -3147,7 +3148,7 @@ public class SequenceAnalysisController extends SpringActionController
 
                     try
                     {
-                        if (intervalMap.containsKey(rowId.toString()))
+                        if (intervalMap.has(rowId.toString()))
                         {
                             String wholeSequence = model.getSequence();
                             if (wholeSequence == null)
@@ -3389,7 +3390,7 @@ public class SequenceAnalysisController extends SpringActionController
             JSONObject resourceSettings = getReourceSettingsJson();
             if (resourceSettings != null && resourceSettings.get("parameters") != null)
             {
-                for (JSONObject o : resourceSettings.getJSONArray("parameters").toJSONObjectArray())
+                for (JSONObject o : JsonUtil.toJSONObjectList(resourceSettings.getJSONArray("parameters")))
                 {
                     //a little unclean.  the ResourceAllocator will expect a fully qualified name
                     o.put("name", "resourceSettings.resourceSettings." + o.getString("name"));
@@ -4252,7 +4253,7 @@ public class SequenceAnalysisController extends SpringActionController
                 JSONArray arr = new JSONArray(form.getRecords());
 
                 Map<File, Map<String, Object>> toCreate = new HashMap<>();
-                for (JSONObject o : arr.toJSONObjectArray())
+                for (JSONObject o : JsonUtil.toJSONObjectList(arr))
                 {
                     File file = new File(dirData, o.getString("fileName"));
                     if (!file.exists())
@@ -5059,7 +5060,7 @@ public class SequenceAnalysisController extends SpringActionController
             JSONArray arr = new JSONArray(form.getRecords());
 
             List<PipelineJob> toCreate = new ArrayList<>();
-            for (JSONObject o : arr.toJSONObjectArray())
+            for (JSONObject o : JsonUtil.toJSONObjectList(arr))
             {
                 File file = new File(dirData, o.getString("fileName"));
                 if (!file.exists())

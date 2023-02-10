@@ -3,7 +3,7 @@ package org.labkey.sequenceanalysis.analysis;
 import au.com.bytecode.opencsv.CSVWriter;
 import htsjdk.samtools.filter.DuplicateReadFilter;
 import org.apache.commons.lang3.StringUtils;
-import org.json.old.JSONObject;
+import org.json.JSONObject;
 import org.labkey.api.iterator.CloseableIterator;
 import org.labkey.api.module.ModuleLoader;
 import org.labkey.api.pipeline.PipelineJob;
@@ -224,7 +224,7 @@ public class UnmappedSequenceBasedGenotypeHandler extends AbstractParameterizedO
                     aggregators.add(agg);
 
                     File outputLog = null;
-                    if (params.containsKey("writeLog") && params.optBoolean("writeLog", false))
+                    if (params.has("writeLog") && params.optBoolean("writeLog", false))
                     {
                         outputLog = new File(ctx.getOutputDir(), FileUtil.getBaseName(so.getFile()) + ".sbt.txt.gz");
                         agg.setOutputLog(outputLog);

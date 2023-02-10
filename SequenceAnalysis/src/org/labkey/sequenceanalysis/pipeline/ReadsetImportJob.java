@@ -2,8 +2,8 @@ package org.labkey.sequenceanalysis.pipeline;
 
 import org.apache.commons.beanutils.ConversionException;
 import org.apache.commons.lang3.StringUtils;
-import org.json.old.JSONArray;
-import org.json.old.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.labkey.api.data.Container;
 import org.labkey.api.data.ContainerManager;
 import org.labkey.api.data.ConvertHelper;
@@ -139,18 +139,17 @@ public class ReadsetImportJob extends SequenceJob
                 }
 
                 List<File> inputFilesSubset = new ArrayList<>();
-                JSONObject[] files = new JSONArray(fileGroup.getString("files")).toJSONObjectArray();
-                for (int i = 0; i < files.length; i++)
+                JSONArray files = new JSONArray(fileGroup.getString("files"));
+                for (int i = 0; i < files.length(); i++)
                 {
-                    JSONObject file1 = files[i].getJSONObject("file1");
+                    JSONObject file1 = files.getJSONObject(i).getJSONObject("file1");
                     inputFilesSubset.add(findFile(file1, inputFiles));
 
-                    if (files[i].get("file2") != null)
+                    if (files.getJSONObject(i).get("file2") != null)
                     {
-                        JSONObject file2 = files[i].getJSONObject("file2");
+                        JSONObject file2 = files.getJSONObject(i).getJSONObject("file2");
                         inputFilesSubset.add(findFile(file2, inputFiles));
                     }
-
                 }
 
                 if (inputFilesSubset.isEmpty())
