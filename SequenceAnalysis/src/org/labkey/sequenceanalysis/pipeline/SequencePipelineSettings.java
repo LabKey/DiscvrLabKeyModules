@@ -186,8 +186,8 @@ public class SequencePipelineSettings
         model.setPlatform(o.optString("platform"));
         model.setApplication(o.optString("application"));
         model.setChemistry(o.optString("chemistry"));
-        model.setConcentration(o.optString("concentration") == null ? null : o.getDouble("concentration"));
-        model.setFragmentSize(o.optString("fragmentSize") == null ? null : o.getDouble("fragmentSize"));
+        model.setConcentration(!o.has("concentration") || o.isNull("concentration") ? null : o.getDouble("concentration"));
+        model.setFragmentSize(!o.has("fragmentSize") || o.isNull("fragmentSize") ? null : o.getDouble("fragmentSize"));
         model.setSampleType(o.optString("sampletype"));
         model.setLibraryType(o.optString("librarytype"));
         model.setName(o.optString("readsetname"));
