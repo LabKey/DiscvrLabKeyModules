@@ -203,6 +203,9 @@ public class ToolParameterDescriptor
         if (jobParams.has(key))
         {
             Object val = jobParams.get(key);
+            if (val == JSONObject.NULL) {
+                val = null;
+            }
 
             return ConvertHelper.convert(val, clazz);
         }
