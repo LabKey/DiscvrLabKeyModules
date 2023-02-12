@@ -204,13 +204,7 @@ public class JBrowseController extends SpringActionController
             if (_trackIds == null)
                 return Collections.emptyList();
 
-            List<Integer> ret = new ArrayList<>();
-            for (Integer o : _trackIds)
-            {
-                ret.add(o);
-            }
-
-            return ret;
+            return new ArrayList<>(Arrays.asList(_trackIds));
         }
 
         public void setTrackIds(Integer[] trackIds)
@@ -234,13 +228,7 @@ public class JBrowseController extends SpringActionController
             if (_outputFileIds == null)
                 return Collections.emptyList();
 
-            List<Integer> ret = new ArrayList<>();
-            for (Integer o : _outputFileIds)
-            {
-                ret.add(o);
-            }
-
-            return ret;
+            return new ArrayList<>(Arrays.asList(_outputFileIds));
         }
 
         public void setOutputFileIds(Integer[] outputFileIds)
@@ -250,7 +238,7 @@ public class JBrowseController extends SpringActionController
 
         public Boolean getIsTemporary()
         {
-            return _isTemporary == null ? false : _isTemporary;
+            return _isTemporary != null && _isTemporary;
         }
 
         public void setIsTemporary(Boolean isTemporary)
@@ -351,7 +339,7 @@ public class JBrowseController extends SpringActionController
         private String _title;
 
         @Override
-        public ModelAndView getView(BrowserForm form, BindException errors) throws Exception
+        public ModelAndView getView(BrowserForm form, BindException errors)
         {
             String guid = form.getEffectiveSessionId();
             JBrowseSession db = isValidUUID(guid) ? new TableSelector(JBrowseSchema.getInstance().getTable(JBrowseSchema.TABLE_DATABASES), new SimpleFilter(FieldKey.fromString("objectid"), form.getEffectiveSessionId()), null).getObject(JBrowseSession.class) : null;
@@ -505,7 +493,7 @@ public class JBrowseController extends SpringActionController
     }
 
     @RequiresPermission(ReadPermission.class)
-    public class GetGenotypesAction extends ReadOnlyApiAction<GetGenotypesForm>
+    public static class GetGenotypesAction extends ReadOnlyApiAction<GetGenotypesForm>
     {
         private List<JsonFile> getJsonFiles(GetGenotypesForm form)
         {
@@ -693,7 +681,7 @@ public class JBrowseController extends SpringActionController
     }
 
     @RequiresPermission(ReadPermission.class)
-    public class GetSessionAction extends ReadOnlyApiAction<GetSessionForm>
+    public static class GetSessionAction extends ReadOnlyApiAction<GetSessionForm>
     {
         private static final String DEMO = "demo";
         private static final String MGAP = "mGAP";
