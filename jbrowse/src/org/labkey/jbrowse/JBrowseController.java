@@ -439,6 +439,12 @@ public class JBrowseController extends SpringActionController
             TableSelector ts = new TableSelector(JBrowseSchema.getInstance().getTable(JBrowseSchema.TABLE_JSONFILES), PageFlowUtil.set("objectid", "container", "trackJson"), new SimpleFilter(FieldKey.fromString("objectid"), objectIds, CompareType.IN), null);
             ts.forEachResults(rs -> {
                 Container c = ContainerManager.getForId(rs.getString(FieldKey.fromString("container")));
+                if (c == null)
+                {
+                    // Should never occur unless the DB has bad values:
+                    throw new IllegalStateException("Unknown container: " + rs.getString(FieldKey.fromString("container")));
+                }
+
                 if (!c.hasPermission(getUser(), UpdatePermission.class))
                 {
                     throw new UnauthorizedException("User does not have permission to update records in the folder: " + c.getPath());
@@ -447,13 +453,14 @@ public class JBrowseController extends SpringActionController
                 JSONObject json = rs.getString("trackJson") == null ? new JSONObject() : new JSONObject(rs.getString("trackJson"));
                 for (String key : attributes.keySet())
                 {
-                    if (StringUtils.trimToNull(attributes.getString(key)) == null)
+                    String val = attributes.get(key) == null ? null : StringUtils.trimToNull(String.valueOf(attributes.get(key)));
+                    if (val == null)
                     {
                         json.remove(key);
                     }
                     else
                     {
-                        json.put(key, attributes.get(key));
+                        json.put(key, val);
                     }
                 }
 
