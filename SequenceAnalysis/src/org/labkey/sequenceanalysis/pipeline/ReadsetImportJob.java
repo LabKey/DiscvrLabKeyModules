@@ -139,7 +139,7 @@ public class ReadsetImportJob extends SequenceJob
                 }
 
                 List<File> inputFilesSubset = new ArrayList<>();
-                JSONArray files = new JSONArray(fileGroup.getString("files"));
+                JSONArray files = fileGroup.getJSONArray("files");
                 for (int i = 0; i < files.length(); i++)
                 {
                     JSONObject file1 = files.getJSONObject(i).getJSONObject("file1");
