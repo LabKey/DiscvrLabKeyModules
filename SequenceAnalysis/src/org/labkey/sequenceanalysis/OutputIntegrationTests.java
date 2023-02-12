@@ -199,7 +199,7 @@ public class OutputIntegrationTests
             File dictFile = new File(data.getFile().getParent(), FileUtil.getBaseName(data.getFile().getName()) + ".dict");
             if (dictFile.exists())
             {
-                SAMSequenceDictionary dict = SAMSequenceDictionaryExtractor.extractDictionary(dictFile);
+                SAMSequenceDictionary dict = SAMSequenceDictionaryExtractor.extractDictionary(dictFile.toPath());
                 builder.setReferenceDictionary(dict);
                 header.setSequenceDictionary(dict);
             }

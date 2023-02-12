@@ -1,6 +1,7 @@
 package org.labkey.sequenceanalysis.run.variant;
 
 import htsjdk.samtools.util.Interval;
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.labkey.api.exp.api.ExpData;
@@ -67,7 +68,7 @@ public class VariantFiltrationStep extends AbstractCommandPipelineStep<VariantFi
         params.addAll(getClientCommandArgs());
 
         //filters
-        String filterText = getProvider().getParameterByName("filters").extractValue(getPipelineCtx().getJob(), getProvider(), getStepIdx(), String.class, null);
+        String filterText = StringUtils.trimToNull(getProvider().getParameterByName("filters").extractValue(getPipelineCtx().getJob(), getProvider(), getStepIdx(), String.class, null));
         if (filterText != null)
         {
             JSONArray filterArr = new JSONArray(filterText);
