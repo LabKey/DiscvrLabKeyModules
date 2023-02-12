@@ -2138,7 +2138,7 @@ public class SequenceAnalysisController extends SpringActionController
                 else if (o.has("relPath") || o.has("fileName"))
                 {
                     File f;
-                    if (o.get("relPath") == null)
+                    if (o.opt("relPath") == null)
                     {
                         if (path != null)
                         {
@@ -2162,7 +2162,7 @@ public class SequenceAnalysisController extends SpringActionController
 
                     ret.add(f);
                 }
-                else if (o.has("filePath"))
+                else if (o.opt("filePath") != null)
                 {
                     File f = new File(o.getString("filePath"));
                     if (!f.exists())
@@ -2181,7 +2181,7 @@ public class SequenceAnalysisController extends SpringActionController
     }
 
     @RequiresPermission(InsertPermission.class)
-    public class CreateReferenceLibraryAction extends MutatingApiAction<CreateReferenceLibraryForm>
+    public static class CreateReferenceLibraryAction extends MutatingApiAction<CreateReferenceLibraryForm>
     {
         @Override
         public ApiResponse execute(CreateReferenceLibraryForm form, BindException errors) throws Exception
