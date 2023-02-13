@@ -145,7 +145,7 @@ public class ReadsetImportJob extends SequenceJob
                     JSONObject file1 = files.getJSONObject(i).getJSONObject("file1");
                     inputFilesSubset.add(findFile(file1, inputFiles));
 
-                    if (!files.getJSONObject(i).has("file2") || files.getJSONObject(i).isNull("file2"))
+                    if (files.getJSONObject(i).has("file2") && !files.getJSONObject(i).isNull("file2"))
                     {
                         JSONObject file2 = files.getJSONObject(i).getJSONObject("file2");
                         inputFilesSubset.add(findFile(file2, inputFiles));
