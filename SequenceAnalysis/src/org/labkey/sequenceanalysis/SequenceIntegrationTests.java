@@ -1343,7 +1343,7 @@ public class SequenceIntegrationTests
                 Assert.assertEquals("Incorrect sampleid", o.getInt("sampleid"), m.getSampleId().intValue());
                 Assert.assertEquals("Incorrect subjectId", o.getString("subjectid"), m.getSubjectId());
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-                Assert.assertEquals("Incorrect sampleDate", o.getString("sampledate"), m.getSampleDate() == null ?  null : format.format(m.getSampleDate()));
+                Assert.assertEquals("Incorrect sampleDate", o.optString("sampledate", null), m.getSampleDate() == null ?  null : format.format(m.getSampleDate()));
 
                 String fileGroup = o.getString("fileGroupId");
                 List<String> keys = config.keySet().stream().filter(x -> x.startsWith("fileGroup_")).filter(x -> fileGroup.equals(new JSONObject(config.getString(x)).getString("name"))).collect(Collectors.toList());
@@ -1351,7 +1351,7 @@ public class SequenceIntegrationTests
                         map(x -> new JSONObject(config.getString(x)).getJSONArray("files").toList()).
                         flatMap(List::stream).
                         map(x -> (JSONObject)x).
-                        map(y -> y.getString("platformUnit") == null ? y.getString("file1") : y.getString("platformUnit")).collect(Collectors.toSet());
+                        map(y -> y.isNull("platformUnit") ? y.getString("file1") : y.getString("platformUnit")).collect(Collectors.toSet());
                 Assert.assertFalse("No matching readdata", platformUnits.isEmpty());
 
                 Assert.assertEquals("Incorrect number of readdata", m.getReadData().size(), platformUnits.size());
