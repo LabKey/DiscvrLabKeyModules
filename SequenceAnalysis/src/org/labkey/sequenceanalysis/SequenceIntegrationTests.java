@@ -1346,12 +1346,12 @@ public class SequenceIntegrationTests
                 Assert.assertEquals("Incorrect sampleDate", o.optString("sampledate", null), m.getSampleDate() == null ?  null : format.format(m.getSampleDate()));
 
                 String fileGroup = o.getString("fileGroupId");
-                List<String> keys = config.keySet().stream().filter(x -> x.startsWith("fileGroup_")).filter(x -> fileGroup.equals(new JSONObject(config.getString(x)).getString("name"))).collect(Collectors.toList());
+                List<String> keys = config.keySet().stream().filter(x -> x.startsWith("fileGroup_")).filter(x -> fileGroup.equals(new JSONObject(config.getString(x)).getString("name"))).toList();
                 Set<String> platformUnits = keys.stream().
                         map(x -> new JSONObject(config.getString(x)).getJSONArray("files").toList()).
                         flatMap(List::stream).
-                        map(x -> (JSONObject)x).
-                        map(y -> y.isNull("platformUnit") ? y.getString("file1") : y.getString("platformUnit")).collect(Collectors.toSet());
+                        map(x -> (Map<?,?>)x).
+                        map(y -> y.get("platformUnit") == null ? y.get("file1") : y.get("platformUnit")).map(Object::toString).collect(Collectors.toSet());
                 Assert.assertFalse("No matching readdata", platformUnits.isEmpty());
 
                 Assert.assertEquals("Incorrect number of readdata", m.getReadData().size(), platformUnits.size());
