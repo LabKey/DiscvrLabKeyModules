@@ -222,6 +222,15 @@ public class SequenceIntegrationTests
 
         protected static final Logger _log = LogManager.getLogger(AbstractPipelineTestCase.class);
 
+        protected void writeJobLogToLabKeyLog(File log, String jobName) throws IOException
+        {
+            _log.error("Error processing job: " + jobName);
+            try (BufferedReader r = Readers.getReader(log))
+            {
+                r.lines().forEach(_log::error);
+            }
+        }
+
         protected static boolean doSkipCleanup()
         {
             return "1".equals(TestContext.get().getRequest().getParameter("skipTestCleanup"));
@@ -780,13 +789,21 @@ public class SequenceIntegrationTests
             expectedOutputs.add(new File(basedir, "sequenceImport.json"));
             expectedOutputs.add(new File(basedir, "sequenceSupport.json.gz"));
             expectedOutputs.add(new File(basedir, basedir.getName() + ".pipe.xar.xml"));
-            expectedOutputs.add(new File(basedir, jobName + ".log"));
-            verifyFileOutputs(basedir, expectedOutputs);
-            verifyFileInputs(basedir, fileNames, config, prefix);
+            File log = new File(basedir, jobName + ".log");
+            expectedOutputs.add(log);
+            try
+            {
+                verifyFileOutputs(basedir, expectedOutputs);
+                verifyFileInputs(basedir, fileNames, config, prefix);
+                validateReadsets(jobs, config);
 
-            validateReadsets(jobs, config);
-
-            Assert.assertEquals("Incorrect read number", 3260L, FastqUtils.getSequenceCount(fq));
+                Assert.assertEquals("Incorrect read number", 3260L, FastqUtils.getSequenceCount(fq));
+            }
+            catch (Exception e)
+            {
+                writeJobLogToLabKeyLog(log, jobName);
+                throw e;
+            }
         }
 
         @Test
@@ -818,13 +835,21 @@ public class SequenceIntegrationTests
             expectedOutputs.add(new File(basedir, "sequenceImport.json"));
             expectedOutputs.add(new File(basedir, "sequenceSupport.json.gz"));
             expectedOutputs.add(new File(basedir, basedir.getName() + ".pipe.xar.xml"));
-            expectedOutputs.add(new File(basedir, jobName + ".log"));
-            verifyFileOutputs(basedir, expectedOutputs);
-            verifyFileInputs(basedir, fileNames, config, prefix);
+            File log = new File(basedir, jobName + ".log");
+            expectedOutputs.add(log);
+            try
+            {
+                verifyFileOutputs(basedir, expectedOutputs);
+                verifyFileInputs(basedir, fileNames, config, prefix);
+                validateReadsets(jobs, config);
 
-            validateReadsets(jobs, config);
-
-            Assert.assertEquals("Incorrect read number", 211L, FastqUtils.getSequenceCount(fq));
+                Assert.assertEquals("Incorrect read number", 211L, FastqUtils.getSequenceCount(fq));
+            }
+            catch (Exception e)
+            {
+                writeJobLogToLabKeyLog(log, jobName);
+                throw e;
+            }
         }
 
         private void runMergePipelineJob(String jobName, boolean deleteIntermediates, String prefix) throws Exception
@@ -954,15 +979,24 @@ public class SequenceIntegrationTests
             validateReadsets(jobs, config, 1);  //we expect one per job, total of 3
         }
         
-        private void verifyJob(File basedir, String jobName, Set<File> expectedOutputs, String[] fileNames, String prefix, JSONObject config)
+        private void verifyJob(File basedir, String jobName, Set<File> expectedOutputs, String[] fileNames, String prefix, JSONObject config) throws Exception
         {
-            expectedOutputs.add(new File(basedir, jobName + ".log"));
             expectedOutputs.add(new File(basedir, basedir.getName() + ".pipe.xar.xml"));
             expectedOutputs.add(new File(basedir, "sequenceImport.json"));
             expectedOutputs.add(new File(basedir, "sequenceSupport.json.gz"));
 
-            verifyFileOutputs(basedir, expectedOutputs);
-            verifyFileInputs(basedir, fileNames, config, prefix);
+            File log = new File(basedir, jobName + ".log");
+            expectedOutputs.add(log);
+            try
+            {
+                verifyFileOutputs(basedir, expectedOutputs);
+                verifyFileInputs(basedir, fileNames, config, prefix);
+            }
+            catch (Exception e)
+            {
+                writeJobLogToLabKeyLog(log, jobName);
+                throw e;
+            }
         }
 
         /**
@@ -1092,10 +1126,19 @@ public class SequenceIntegrationTests
             normalizationDir = new File(normalizationDir, prefix + FileUtil.getBaseName(DUAL_BARCODE_FILENAME));
             expectedOutputs.add(new File(normalizationDir, prefix + DUAL_BARCODE_FILENAME + ".gz"));
 
-            verifyFileOutputs(basedir, expectedOutputs);
-            verifyFileInputs(basedir, fileNames, config, prefix);
-            validateReadsets(jobs, config, 4);
-            validateBarcodeFastqs(expectedOutputs);
+            File log = new File(basedir, jobName + ".log");
+            try
+            {
+                verifyFileOutputs(basedir, expectedOutputs);
+                verifyFileInputs(basedir, fileNames, config, prefix);
+                validateReadsets(jobs, config, 4);
+                validateBarcodeFastqs(expectedOutputs);
+            }
+            catch (Exception e)
+            {
+                writeJobLogToLabKeyLog(log, jobName);
+                throw e;
+            }
         }
 
         private File getBaseDir(PipelineJob job)
@@ -1130,10 +1173,20 @@ public class SequenceIntegrationTests
             Set<File> expectedOutputs = getBarcodeOutputs(basedir, jobName, prefix);
             expectedOutputs.add(new File(basedir, prefix + "dualBarcodes_SIV.fastq.gz"));
 
-            verifyFileOutputs(basedir, expectedOutputs);
-            verifyFileInputs(basedir, fileNames, config, prefix);
-            validateReadsets(jobs, config, 4);
-            validateBarcodeFastqs(expectedOutputs);
+            File log = new File(basedir, jobName + ".log");
+            try
+            {
+                verifyFileOutputs(basedir, expectedOutputs);
+                verifyFileInputs(basedir, fileNames, config, prefix);
+                validateReadsets(jobs, config, 4);
+                validateBarcodeFastqs(expectedOutputs);
+            }
+            catch (Exception e)
+            {
+                writeJobLogToLabKeyLog(log, jobName);
+
+                throw e;
+            }
         }
 
         private void validateBarcodeFastqs(Set<File> expectedOutputs) throws Exception
@@ -1183,14 +1236,23 @@ public class SequenceIntegrationTests
             expectedOutputs.add(new File(basedir, "sequenceImport.json"));
             expectedOutputs.add(new File(basedir, "sequenceSupport.json.gz"));
             expectedOutputs.add(new File(basedir, basedir.getName() + ".pipe.xar.xml"));
-            expectedOutputs.add(new File(basedir, jobName + ".log"));
             expectedOutputs.add(new File(basedir, prefix + PAIRED_FILENAME1));
             expectedOutputs.add(new File(basedir, prefix + PAIRED_FILENAME2));
 
-            verifyFileOutputs(basedir, expectedOutputs);
-            verifyFileInputs(basedir, fileNames, config, prefix);
+            File log = new File(basedir, jobName + ".log");
+            expectedOutputs.add(log);
+            try
+            {
+                verifyFileOutputs(basedir, expectedOutputs);
+                verifyFileInputs(basedir, fileNames, config, prefix);
+                validateReadsets(jobs, config);
+            }
+            catch (Exception e)
+            {
+                writeJobLogToLabKeyLog(log, jobName);
 
-            validateReadsets(jobs, config);
+                throw e;
+            }
         }
 
         /**
@@ -1229,17 +1291,25 @@ public class SequenceIntegrationTests
             expectedOutputs.add(new File(basedir, "sequenceImport.json"));
             expectedOutputs.add(new File(basedir, "sequenceSupport.json.gz"));
             expectedOutputs.add(new File(basedir, basedir.getName() + ".pipe.xar.xml"));
-            expectedOutputs.add(new File(basedir, jobName + ".log"));
 
             expectedOutputs.add(new File(basedir, prefix + UNZIPPED_PAIRED_FILENAME1 + ".gz"));
             expectedOutputs.add(new File(basedir, prefix + UNZIPPED_PAIRED_FILENAME2 + ".gz"));
             expectedOutputs.add(new File(basedir, prefix + PAIRED_FILENAME1));
             expectedOutputs.add(new File(basedir, prefix + PAIRED_FILENAME2));
 
-            verifyFileOutputs(basedir, expectedOutputs);
-            verifyFileInputs(basedir, fileNames, config, prefix);
-
-            validateReadsets(jobs, config);
+            File log = new File(basedir, jobName + ".log");
+            expectedOutputs.add(log);
+            try
+            {
+                verifyFileOutputs(basedir, expectedOutputs);
+                verifyFileInputs(basedir, fileNames, config, prefix);
+                validateReadsets(jobs, config);
+            }
+            catch (Exception e)
+            {
+                writeJobLogToLabKeyLog(log, jobName);
+                throw e;
+            }
         }
 
         /**
@@ -1278,7 +1348,6 @@ public class SequenceIntegrationTests
             expectedOutputs.add(new File(basedir, "sequenceImport.json"));
             expectedOutputs.add(new File(basedir, "sequenceSupport.json.gz"));
             expectedOutputs.add(new File(basedir, basedir.getName() + ".pipe.xar.xml"));
-            expectedOutputs.add(new File(basedir, jobName + ".log"));
 
             expectedOutputs.add(new File(basedir, prefix + UNZIPPED_PAIRED_FILENAME1 + ".gz"));
             expectedOutputs.add(new File(basedir, prefix + UNZIPPED_PAIRED_FILENAME2 + ".gz"));
@@ -1286,10 +1355,20 @@ public class SequenceIntegrationTests
             expectedOutputs.add(new File(basedir, prefix + PAIRED_FILENAME1));
             expectedOutputs.add(new File(basedir, prefix + PAIRED_FILENAME2));
 
-            verifyFileOutputs(basedir, expectedOutputs);
-            verifyFileInputs(basedir, fileNames, config, prefix);
+            File log = new File(basedir, jobName + ".log");
+            expectedOutputs.add(log);
+            try
+            {
+                verifyFileOutputs(basedir, expectedOutputs);
+                verifyFileInputs(basedir, fileNames, config, prefix);
+                validateReadsets(jobs, config);
+            }
+            catch (Exception e)
+            {
+                writeJobLogToLabKeyLog(log, jobName);
 
-            validateReadsets(jobs, config);
+                throw e;
+            }
         }
 
         private void validateReadsets(Collection<PipelineJob> jobs, JSONObject config) throws Exception
@@ -1405,12 +1484,12 @@ public class SequenceIntegrationTests
             throw new RuntimeException("Unable to find working dir for readset: " + rs.getRowId());
         }
 
-        protected void validateAlignmentJob(Set<PipelineJob> jobs, Collection<String> additionalFiles, SequenceReadsetImpl rs, Integer aligned, Integer unaligned) throws PipelineJobException
+        protected void validateAlignmentJob(Set<PipelineJob> jobs, Collection<String> additionalFiles, SequenceReadsetImpl rs, Integer aligned, Integer unaligned) throws Exception
         {
             validateAlignmentJob(jobs, additionalFiles, rs, aligned, unaligned, true);
         }
 
-        protected void validateAlignmentJob(Set<PipelineJob> jobs, Collection<String> additionalFiles, SequenceReadsetImpl rs, Integer aligned, Integer unaligned, boolean includeRefFiles) throws PipelineJobException
+        protected void validateAlignmentJob(Set<PipelineJob> jobs, Collection<String> additionalFiles, SequenceReadsetImpl rs, Integer aligned, Integer unaligned, boolean includeRefFiles) throws Exception
         {
             SequenceAlignmentJob job = getAlignmentJob(jobs, rs);
             File basedir = job.getAnalysisDirectory();
@@ -1439,9 +1518,18 @@ public class SequenceIntegrationTests
 
             expectedOutputs.add(new File(basedir, outDir + "/Alignment/idxstats.txt"));
 
-            validateInputs();
-            verifyFileOutputs(basedir, expectedOutputs);
-            validateAlignment(bam, aligned, unaligned);
+            File log = new File(basedir, job.getProtocolName() + ".log");
+            try
+            {
+                validateInputs();
+                verifyFileOutputs(basedir, expectedOutputs);
+                validateAlignment(bam, aligned, unaligned);
+            }
+            catch (Exception e)
+            {
+                writeJobLogToLabKeyLog(log, job.getProtocolName());
+                throw e;
+            }
         }
 
         protected Collection<File> addDefaultAlignmentOutputs(File basedir, String jobName, SequenceReadsetImpl rs, String outDir)
