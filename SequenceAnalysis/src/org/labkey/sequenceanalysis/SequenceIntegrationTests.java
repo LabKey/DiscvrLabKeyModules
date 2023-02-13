@@ -1525,7 +1525,7 @@ public class SequenceIntegrationTests
                 verifyFileOutputs(basedir, expectedOutputs);
                 validateAlignment(bam, aligned, unaligned);
             }
-            catch (Exception e)
+            catch (Throwable e)
             {
                 writeJobLogToLabKeyLog(log, job.getProtocolName());
                 throw e;
