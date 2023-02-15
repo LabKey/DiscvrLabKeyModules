@@ -94,12 +94,12 @@ public class ReadsetImportJob extends SequenceJob
             params.keySet().forEach(x -> {
                 if (x.startsWith("readset_"))
                 {
-                    readsetKeys.put(x.split("_")[1], new JSONObject(params.getString(x)));
+                    readsetKeys.put(x.split("_")[1], new JSONObject(params.get(x).toString()));
                     keysToRemove.add(x);
                 }
                 else if (x.startsWith("fileGroup_"))
                 {
-                    JSONObject json = new JSONObject(params.getString(x));
+                    JSONObject json = new JSONObject(params.get(x).toString());
                     fileGroupKeys.put(json.getString("name"), json);
                     keysToRemove.add(x);
                 }
