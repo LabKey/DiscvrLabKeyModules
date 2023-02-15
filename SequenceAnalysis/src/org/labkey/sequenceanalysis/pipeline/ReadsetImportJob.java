@@ -168,7 +168,7 @@ public class ReadsetImportJob extends SequenceJob
 
     private static File findFile(JSONObject file, List<File> inputFiles)
     {
-        if (!file.isNull("dataId"))
+        if (!file.isNull("dataId") && StringUtils.trimToNull(file.get("dataId").toString()) != null)
         {
             try
             {
@@ -183,7 +183,7 @@ public class ReadsetImportJob extends SequenceJob
             }
             catch (ConversionException | NullPointerException e)
             {
-                throw new IllegalArgumentException("dataId is not an integer: " + file.get("dataId"));
+                throw new IllegalArgumentException("dataId is not an integer: " + "[" + file.get("dataId") + "]");
             }
         }
         else if (!file.isNull("fileName") && StringUtils.trimToNull(file.getString("fileName")) != null)
