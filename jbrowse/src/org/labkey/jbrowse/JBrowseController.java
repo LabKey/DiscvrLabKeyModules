@@ -209,10 +209,7 @@ public class JBrowseController extends SpringActionController
                 return Collections.emptyList();
 
             List<Integer> ret = new ArrayList<>();
-            for (Integer o : _trackIds)
-            {
-                ret.add(o);
-            }
+            Collections.addAll(ret, _trackIds);
 
             return ret;
         }
@@ -239,10 +236,7 @@ public class JBrowseController extends SpringActionController
                 return Collections.emptyList();
 
             List<Integer> ret = new ArrayList<>();
-            for (Integer o : _outputFileIds)
-            {
-                ret.add(o);
-            }
+            Collections.addAll(ret, _outputFileIds);
 
             return ret;
         }
@@ -254,7 +248,7 @@ public class JBrowseController extends SpringActionController
 
         public Boolean getIsTemporary()
         {
-            return _isTemporary == null ? false : _isTemporary;
+            return _isTemporary != null && _isTemporary;
         }
 
         public void setIsTemporary(Boolean isTemporary)

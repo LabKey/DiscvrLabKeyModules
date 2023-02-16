@@ -33,6 +33,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -47,7 +48,7 @@ import java.util.Set;
  */
 public class UnmappedSequenceBasedGenotypeHandler extends AbstractParameterizedOutputHandler<SequenceOutputHandler.SequenceOutputProcessor>
 {
-    private FileType _fileType = new FileType(".bam", FileType.gzSupportLevel.NO_GZ);
+    private final FileType _fileType = new FileType(".bam", FileType.gzSupportLevel.NO_GZ);
 
     public UnmappedSequenceBasedGenotypeHandler()
     {
@@ -80,10 +81,10 @@ public class UnmappedSequenceBasedGenotypeHandler extends AbstractParameterizedO
 
     private static class FastqAggregate
     {
-        private Map<String, Integer> _sampleMap = new HashMap<>();
-        private Map<String, Integer> _sampleTotalReadsMap = new HashMap<>();
+        private final Map<String, Integer> _sampleMap = new HashMap<>();
+        private final Map<String, Integer> _sampleTotalReadsMap = new HashMap<>();
         private Integer _totalReads = 0;
-        private String _sequence;
+        private final String _sequence;
 
         public FastqAggregate(String sequence)
         {
@@ -184,7 +185,7 @@ public class UnmappedSequenceBasedGenotypeHandler extends AbstractParameterizedO
 
                     //first calculate avg qualities at each position
                     job.getLogger().info("Calculating avg quality scores");
-                    AvgBaseQualityAggregator avgBaseQualityAggregator = new AvgBaseQualityAggregator(job.getLogger(), so.getFile(), rg.getWorkingFastaFile(), Arrays.asList(
+                    AvgBaseQualityAggregator avgBaseQualityAggregator = new AvgBaseQualityAggregator(job.getLogger(), so.getFile(), rg.getWorkingFastaFile(), List.of(
                             new DuplicateReadFilter()
                     ));
                     avgBaseQualityAggregator.calculateAvgQuals();
@@ -368,7 +369,7 @@ public class UnmappedSequenceBasedGenotypeHandler extends AbstractParameterizedO
             }
 
             ctx.getLogger().info("building merged file: " + jointUnmappedCollapsed.getPath());
-            try (BufferedWriter jointUnmappedCollapsedWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(jointUnmappedCollapsed), "UTF-8"));CSVWriter jointUnmappedCollapsedTsvWriter = new CSVWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(jointUnmappedCollapsedTsv), "UTF-8")), '\t', CSVWriter.NO_QUOTE_CHARACTER))
+            try (BufferedWriter jointUnmappedCollapsedWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(jointUnmappedCollapsed), StandardCharsets.UTF_8)); CSVWriter jointUnmappedCollapsedTsvWriter = new CSVWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(jointUnmappedCollapsedTsv), StandardCharsets.UTF_8)), '\t', CSVWriter.NO_QUOTE_CHARACTER))
             {
                 List<FastqAggregate> sorted = new ArrayList<>();
                 sorted.addAll(uniqueReads.values());

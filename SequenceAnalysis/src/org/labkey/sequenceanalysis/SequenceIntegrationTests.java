@@ -97,7 +97,7 @@ import java.util.stream.Collectors;
  */
 public class SequenceIntegrationTests
 {
-    private static SequenceIntegrationTests _instance = new SequenceIntegrationTests();
+    private static final SequenceIntegrationTests _instance = new SequenceIntegrationTests();
     public static final String PIPELINE_PROP_NAME = "sequencePipelineEnabled";
 
     private SequenceIntegrationTests()
@@ -423,11 +423,13 @@ public class SequenceIntegrationTests
         {
             IOFileFilter filter = new IOFileFilter()
             {
+                @Override
                 public boolean accept(File file)
                 {
                     return true;
                 }
 
+                @Override
                 public boolean accept(File dir, String name)
                 {
                     return true;
@@ -743,6 +745,7 @@ public class SequenceIntegrationTests
             doCleanup(PROJECT_NAME);
         }
 
+        @Override
         protected String getProjectName()
         {
             return PROJECT_NAME;
@@ -768,7 +771,7 @@ public class SequenceIntegrationTests
             g.filePairs.add(new FileGroup.FilePair());
             g.filePairs.get(0).file1 = new File(prefix + DUAL_BARCODE_FILENAME);
 
-            appendSamplesForImport(config, Arrays.asList(g));
+            appendSamplesForImport(config, List.of(g));
 
             Set<PipelineJob> jobs = createPipelineJob(jobName, config, SequenceAnalysisController.AnalyzeForm.TYPE.readsetImport);
             waitForJobs(jobs);
@@ -804,7 +807,7 @@ public class SequenceIntegrationTests
             g.filePairs.add(new FileGroup.FilePair());
             g.filePairs.get(0).file1 = new File(prefix + PAIRED_FILENAME1);
 
-            appendSamplesForImport(config, Arrays.asList(g));
+            appendSamplesForImport(config, List.of(g));
             config.put("inputFileTreatment", "leaveInPlace");
 
             Set<PipelineJob> jobs = createPipelineJob(jobName, config, SequenceAnalysisController.AnalyzeForm.TYPE.readsetImport);
@@ -1014,7 +1017,7 @@ public class SequenceIntegrationTests
                 g.filePairs.add(p);
             }
 
-            appendSamplesForImport(config, Arrays.asList(g));
+            appendSamplesForImport(config, List.of(g));
 
             config.put("inputfile.barcode", true);
             config.put("inputfile.barcodeGroups", "[\"GSMIDs\",\"Fluidigm\"]");
@@ -1173,7 +1176,7 @@ public class SequenceIntegrationTests
             g.filePairs.get(0).file1 = new File(prefix + PAIRED_FILENAME1);
             g.filePairs.get(0).file2 = new File(prefix + PAIRED_FILENAME2);
 
-            appendSamplesForImport(config, Arrays.asList(g));
+            appendSamplesForImport(config, List.of(g));
 
             Set<PipelineJob> jobs = createPipelineJob(jobName, config, SequenceAnalysisController.AnalyzeForm.TYPE.readsetImport);
             waitForJobs(jobs);
@@ -1219,7 +1222,7 @@ public class SequenceIntegrationTests
             g.filePairs.get(1).file1 = new File(prefix + UNZIPPED_PAIRED_FILENAME1);
             g.filePairs.get(1).file2 = new File(prefix + UNZIPPED_PAIRED_FILENAME2);
 
-            appendSamplesForImport(config, Arrays.asList(g));
+            appendSamplesForImport(config, List.of(g));
 
             Set<PipelineJob> jobs = createPipelineJob(jobName, config, SequenceAnalysisController.AnalyzeForm.TYPE.readsetImport);
             waitForJobs(jobs);
@@ -1268,7 +1271,7 @@ public class SequenceIntegrationTests
             g.filePairs.get(1).file1 = new File(prefix + UNZIPPED_PAIRED_FILENAME1);
             g.filePairs.get(1).file2 = new File(prefix + UNZIPPED_PAIRED_FILENAME2);
 
-            appendSamplesForImport(config, Arrays.asList(g));
+            appendSamplesForImport(config, List.of(g));
 
             Set<PipelineJob> jobs = createPipelineJob(jobName, config, SequenceAnalysisController.AnalyzeForm.TYPE.readsetImport);
             waitForJobs(jobs);
@@ -1513,14 +1516,14 @@ public class SequenceIntegrationTests
 
             File file1 = new File(_pipelineRoot, PAIRED_FILENAME1);
             File file2 = new File(_pipelineRoot, PAIRED_FILENAME2);
-            models.add(createReadset("TestReadset1", Arrays.asList(Pair.of(file1, file2))));
+            models.add(createReadset("TestReadset1", List.of(Pair.of(file1, file2))));
 
 
             File file3 = new File(_pipelineRoot, UNZIPPED_PAIRED_FILENAME1);
-            models.add(createReadset("TestReadset2", Arrays.asList(Pair.of(file3, null))));
+            models.add(createReadset("TestReadset2", List.of(Pair.of(file3, null))));
 
             File file4 = new File(_pipelineRoot, UNZIPPED_PAIRED_FILENAME2);
-            models.add(createReadset("TestReadset3", Arrays.asList(Pair.of(file4, null))));
+            models.add(createReadset("TestReadset3", List.of(Pair.of(file4, null))));
 
             return models;
         }
@@ -1688,7 +1691,7 @@ public class SequenceIntegrationTests
                 throw new PipelineJobException("Unable to find SIVMac239 NT sequence");
             }
 
-            ReferenceLibraryPipelineJob libraryJob = SequenceAnalysisManager.get().createReferenceLibrary(Arrays.asList(mac239Id), _project, _context.getUser(), libraryName, null, null, true, false, null, null);
+            ReferenceLibraryPipelineJob libraryJob = SequenceAnalysisManager.get().createReferenceLibrary(List.of(mac239Id), _project, _context.getUser(), libraryName, null, null, true, false, null, null);
             waitForJobs(Collections.singleton(libraryJob));
 
             return new TableSelector(SequenceAnalysisSchema.getTable(SequenceAnalysisSchema.TABLE_REF_LIBRARIES), PageFlowUtil.set("rowid"), libraryFilter, null).getObject(Integer.class);
@@ -2220,6 +2223,7 @@ public class SequenceIntegrationTests
             doCleanup(PROJECT_NAME);
         }
 
+        @Override
         protected String getProjectName()
         {
             return PROJECT_NAME;
@@ -2445,7 +2449,7 @@ public class SequenceIntegrationTests
             config.put("alignment", "BWA-Mem");
             config.put("referenceLibraryCreation", "SavedLibrary");
             config.put("referenceLibraryCreation.SavedLibrary.libraryId", libraryId);
-            appendSamplesForAlignment(config, Arrays.asList(_readsets.get(0)));
+            appendSamplesForAlignment(config, Collections.singletonList(_readsets.get(0)));
 
             Set<PipelineJob> jobs = createPipelineJob(jobName, config, SequenceAnalysisController.AnalyzeForm.TYPE.alignment);
             waitForJobs(jobs);
@@ -2740,6 +2744,7 @@ public class SequenceIntegrationTests
             doCleanup(PROJECT_NAME);
         }
 
+        @Override
         protected String getProjectName()
         {
             return PROJECT_NAME;

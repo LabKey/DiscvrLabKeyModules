@@ -34,12 +34,12 @@ import java.util.List;
  */
 abstract public class AbstractPipelineStepProvider<StepType extends PipelineStep> implements PipelineStepProvider
 {
-    private String _name;
-    private String _label;
-    private String _toolName;
-    private String _websiteURL;
-    private String _description;
-    private LinkedHashSet<String> _clientDependencyPaths;
+    private final String _name;
+    private final String _label;
+    private final String _toolName;
+    private final String _websiteURL;
+    private final String _description;
+    private final LinkedHashSet<String> _clientDependencyPaths;
     private List<ToolParameterDescriptor> _parameters;
     List<PipelineStepProvider> _prerequisites = new ArrayList<>();
 

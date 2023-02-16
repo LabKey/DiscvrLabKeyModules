@@ -334,7 +334,7 @@ public class NextCladeHandler extends AbstractParameterizedOutputHandler<Sequenc
                         if (vc.isIndel())
                         {
                             job.getLogger().info("Inferred associated NT is: " + vc.getStart());
-                            job.getLogger().info("for pos: " + aa.toString());
+                            job.getLogger().info("for pos: " + aa);
                             vcList.add(vc);
                             break OUTER;
                         }
@@ -344,7 +344,7 @@ public class NextCladeHandler extends AbstractParameterizedOutputHandler<Sequenc
 
             if (vcList.isEmpty())
             {
-                job.getLogger().error("Cannot find matching NT SNP: " + aa.toString());
+                job.getLogger().error("Cannot find matching NT SNP: " + aa);
                 if (aa.containsKey("refContext") && aa.getString("refContext").length() > 4)
                 {
                     // Skip complex indels with just a logged error, but let the job finish

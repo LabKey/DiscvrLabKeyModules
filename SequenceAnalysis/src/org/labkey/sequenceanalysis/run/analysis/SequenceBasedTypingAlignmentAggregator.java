@@ -68,6 +68,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -93,23 +94,23 @@ public class SequenceBasedTypingAlignmentAggregator extends AbstractAlignmentAgg
     private File _lineageMapFile = null;
     private double _minPctForLineageFiltering = 0.0;
 
-    private Set<String> _distinctReferences = new HashSet<>();
+    private final Set<String> _distinctReferences = new HashSet<>();
     private Map<String, Integer> _acceptedReferences = new HashMap<>();
     private Set<String> _acceptedReads = new HashSet<>();
-    private Map<String, Integer> _acceptedAlignments = new HashMap<>();
-    private Set<String> _uniqueReads = new HashSet<>();
-    private Map<String, Set<String>> _alignmentsByReadM1 = new HashMap<>();
-    private Map<String, Set<String>> _alignmentsByReadM2 = new HashMap<>();
-    private Map<String, IntervalList> _intervalsByReference = new HashMap<>();
+    private final Map<String, Integer> _acceptedAlignments = new HashMap<>();
+    private final Set<String> _uniqueReads = new HashSet<>();
+    private final Map<String, Set<String>> _alignmentsByReadM1 = new HashMap<>();
+    private final Map<String, Set<String>> _alignmentsByReadM2 = new HashMap<>();
+    private final Map<String, IntervalList> _intervalsByReference = new HashMap<>();
     private int _forwardAlignmentsDiscardedBySnps = 0;
     private int _reverseAlignmentsDiscardedBySnps = 0;
 
-    private Set<String> _unaligned = new HashSet<>();
-    private Set<String> _unmappedWithMappedMate = new HashSet<>();
-    private Set<String> _mappedWithoutHits = new HashSet<>();
+    private final Set<String> _unaligned = new HashSet<>();
+    private final Set<String> _unmappedWithMappedMate = new HashSet<>();
+    private final Set<String> _mappedWithoutHits = new HashSet<>();
     private Set<String> _mappedWithoutHitsExcludingPassed = new HashSet<>();
     private int _totalAlignmentsInspected = 0;
-    private int _maxSNPs = 0;
+    private final int _maxSNPs = 0;
     private int _skippedReferencesByPct = 0;
     private int _skippedReferencesByRead = 0;
 
@@ -121,7 +122,7 @@ public class SequenceBasedTypingAlignmentAggregator extends AbstractAlignmentAgg
     private int _pairsWithoutSharedHits = 0;
     private int _singletonCalls = 0;
     private int _pairedCalls = 0;
-    private Set<String> _rejectedSingletonReadNames = new HashSet<>();
+    private final Set<String> _rejectedSingletonReadNames = new HashSet<>();
     private int _rejectedSingletonAlignments = 0;
     private int _shortAlignments = 0;
 
@@ -317,7 +318,7 @@ public class SequenceBasedTypingAlignmentAggregator extends AbstractAlignmentAgg
 
     public Map<String, HitSet> getAlignmentSummary(File outputLog) throws IOException, PipelineJobException
     {
-        try (CSVWriter writer = outputLog == null ? null : new CSVWriter(new BufferedWriter(new OutputStreamWriter(getLogOutputStream(outputLog), "UTF-8")), '\t', CSVWriter.NO_QUOTE_CHARACTER))
+        try (CSVWriter writer = outputLog == null ? null : new CSVWriter(new BufferedWriter(new OutputStreamWriter(getLogOutputStream(outputLog), StandardCharsets.UTF_8)), '\t', CSVWriter.NO_QUOTE_CHARACTER))
         {
             //these are stage-1 filters, filtering on the read-pair level
             Map<String, HitSet> totals = doFilterStage1(writer);
@@ -1046,7 +1047,7 @@ public class SequenceBasedTypingAlignmentAggregator extends AbstractAlignmentAgg
 
     public static void processSBTSummary(User u, Container c, AnalysisModel model, File output, File refFasta, Logger log) throws PipelineJobException
     {
-        try (CSVReader reader = new CSVReader(new BufferedReader(new InputStreamReader(new FileInputStream(output), "UTF-8")), '\t', CSVWriter.DEFAULT_QUOTE_CHARACTER))
+        try (CSVReader reader = new CSVReader(new BufferedReader(new InputStreamReader(new FileInputStream(output), StandardCharsets.UTF_8)), '\t', CSVWriter.DEFAULT_QUOTE_CHARACTER))
         {
             try (DbScope.Transaction transaction = ExperimentService.get().ensureTransaction())
             {
