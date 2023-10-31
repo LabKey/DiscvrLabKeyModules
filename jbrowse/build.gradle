@@ -5,7 +5,8 @@ repositories {
 	maven {
 		url "https://maven.scijava.org/content/repositories/public/"
 		content {
-			includeGroup "cisd"
+			// Transitive dependency from SequenceAnalysis
+			includeGroup "cisd" //jhdf5
 		}
 	}
 }
