@@ -193,7 +193,9 @@ if (project.findProject(BuildUtils.getTestProjectPath(project.gradle)) != null &
                 return newLine
 
             })
-            task.destinationDir = new File("${ServerDeployExtension.getServerDeployDirectory(project)}/config")
+            task.destinationDir = BuildUtils.useEmbeddedTomcat(project)
+                    ? new File("${BuildUtils.getEmbeddedConfigPath(project)}")
+                    : new File("${ServerDeployExtension.getServerDeployDirectory(project)}/config")
     }
     testProject.tasks.named("startTomcat").configure {
         dependsOn(createPipelineConfigTask)
