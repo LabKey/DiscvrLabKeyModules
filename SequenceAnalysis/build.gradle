@@ -23,7 +23,7 @@ configurations.all {
     resolutionStrategy {
         force "jakarta.activation:jakarta.activation-api:${activationVersion}"
         // NOTE: this should be kept in sync with mcc module:
-        force "jakarta.xml.bind:jakarta.xml.bind-api:${jaxbVersion}"
+        force "jakarta.xml.bind:jakarta.xml.bind-api:${jaxbApiVersion}"
     }
 }
 
