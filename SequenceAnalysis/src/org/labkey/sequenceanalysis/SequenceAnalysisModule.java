@@ -275,7 +275,6 @@ public class SequenceAnalysisModule extends ExtendedSimpleModule
         SequencePipelineService.get().registerPipelineStep(new PbsvAnalysis.Provider());
         SequencePipelineService.get().registerPipelineStep(new GenrichStep.Provider());
 
-        //SequencePipelineService.get().registerPipelineStep(new BlastUnmappedReadAnalysis.Provider());
         SequencePipelineService.get().registerPipelineStep(new PARalyzerAnalysis.Provider());
         SequencePipelineService.get().registerPipelineStep(new RnaSeQCStep.Provider());
 
@@ -445,7 +444,8 @@ public class SequenceAnalysisModule extends ExtendedSimpleModule
             SequenceIntegrationTests.SequenceAnalysisPipelineTestCase2.class,
             OutputIntegrationTests.VariantProcessingTest.class,
             SequenceRemoteIntegrationTests.class,
-            SequenceTriggerHelper.TestCase.class
+            SequenceTriggerHelper.TestCase.class,
+            SequencePipelineServiceImpl.TestCase.class
         ));
 
         return testClasses;
