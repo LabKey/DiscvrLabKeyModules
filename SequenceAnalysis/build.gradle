@@ -21,9 +21,9 @@ repositories {
 
 configurations.all {
     resolutionStrategy {
-        force "jakarta.activation:jakarta.activation-api:${activationVersion}"
+        force "jakarta.activation:jakarta.activation-api:${activationApiVersion}"
         // NOTE: this should be kept in sync with mcc module:
-        force "jakarta.xml.bind:jakarta.xml.bind-api:${jaxbApiVersion}"
+        force "jakarta.xml.bind:jakarta.xml.bind-api:${jaxbApiOldVersion}"
     }
 }
 
@@ -58,9 +58,10 @@ dependencies {
                     'Java framework for processing biological data'
             ),
             {
-                // Exclude activation jars from webapp to avoid classloader conflicts with <tomcat>/lib/javax.activation.jar
+                // Exclude in favor of angus activation from API
                 exclude group: 'com.sun.activation', module: 'jakarta.activation'
                 exclude group: 'javax.activation', module: 'javax.activation-api'
+                exclude group: "jakarta.activation", module: "jakarta.activation-api"
             }
     )
 
@@ -76,9 +77,10 @@ dependencies {
                     'Java framework for processing biological data'
             ),
             {
-                // Exclude activation jars from webapp to avoid classloader conflicts with <tomcat>/lib/javax.activation.jar
+                // Exclude in favor of angus activation from API
                 exclude group: 'com.sun.activation', module: 'jakarta.activation'
                 exclude group: 'javax.activation', module: 'javax.activation-api'
+                exclude group: "jakarta.activation", module: "jakarta.activation-api"
             }
     )
 
