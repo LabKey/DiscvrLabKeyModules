@@ -21,8 +21,7 @@ repositories {
 
 configurations.all {
     resolutionStrategy {
-        // TODO: if this is a reasonable solution, promote angusActivationVersion to gradle.properties
-        force "org.eclipse.angus:angus-activation:2.0.2"
+        force "org.glassfish.jaxb:jaxb-runtime:${jaxbVersion}"
     }
 }
 
@@ -58,8 +57,7 @@ dependencies {
             ),
             {
                 // Exclude in favor of angus activation from API
-                exclude group: 'com.sun.activation', module: 'jakarta.activation'
-                exclude group: 'javax.activation', module: 'javax.activation-api'
+                exclude group: 'org.eclipse.angus', module: 'angus-activation'
                 exclude group: "jakarta.activation", module: "jakarta.activation-api"
             }
     )
@@ -77,8 +75,7 @@ dependencies {
             ),
             {
                 // Exclude in favor of angus activation from API
-                exclude group: 'com.sun.activation', module: 'jakarta.activation'
-                exclude group: 'javax.activation', module: 'javax.activation-api'
+                exclude group: 'org.eclipse.angus', module: 'angus-activation'
                 exclude group: "jakarta.activation", module: "jakarta.activation-api"
             }
     )
