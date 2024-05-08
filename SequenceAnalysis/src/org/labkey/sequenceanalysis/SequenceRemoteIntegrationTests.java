@@ -215,6 +215,8 @@ public class SequenceRemoteIntegrationTests extends SequenceIntegrationTests.Abs
         ProcessBuilder pb = new ProcessBuilder(args);
         pb.directory(workDir);
 
+        _log.info("Executing job: " + pb.directory().getAbsolutePath() + " $ " + String.join(" ", pb.command()));
+
         Process proc;
         try
         {
