@@ -83,10 +83,12 @@ public class SequenceRemoteIntegrationTests extends SequenceIntegrationTests.Abs
 
                     path = path.replaceAll("\\\\", "/");
                     line = line.replaceAll("@@SEQUENCEANALYSIS_TOOLS@@", path);
+                    _log.info("Writing to pipelineConfig.xml: " + line);
                 }
                 else if (line.contains("@@WORK_DIR@@"))
                 {
                     line = line.replaceAll("@@WORK_DIR@@", outDir.getPath().replaceAll("\\\\", "/"));
+                    _log.info("Writing to pipelineConfig.xml: " + line);
                 }
 
                 writer.println(line);
