@@ -81,7 +81,6 @@ public class SequenceRemoteIntegrationTests extends SequenceIntegrationTests.Abs
                         path = PipelineJobService.get().getAppProperties().getToolsDirectory();
                     }
 
-                    path = path.replaceAll("\\\\", "/").replace("deploy/bin", "deploy/embedded/bin");
                     line = line.replaceAll("@@SEQUENCEANALYSIS_TOOLS@@", path);
                     _log.info("Writing to pipelineConfig.xml: " + line);
                 }
@@ -215,7 +214,7 @@ public class SequenceRemoteIntegrationTests extends SequenceIntegrationTests.Abs
         ProcessBuilder pb = new ProcessBuilder(args);
         pb.directory(workDir);
 
-        _log.info("Executing job: " + pb.directory().getAbsolutePath() + " $ " + String.join(" ", pb.command()));
+        _log.info("Executing job in '" + pb.directory().getAbsolutePath() + "': " + String.join(" ", pb.command()));
 
         Process proc;
         try
