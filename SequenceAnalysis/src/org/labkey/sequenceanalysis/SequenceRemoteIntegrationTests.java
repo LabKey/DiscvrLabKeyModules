@@ -81,6 +81,7 @@ public class SequenceRemoteIntegrationTests extends SequenceIntegrationTests.Abs
                         path = PipelineJobService.get().getAppProperties().getToolsDirectory();
                     }
 
+                    path = path.replaceAll("\\\\", "/");
                     line = line.replaceAll("@@SEQUENCEANALYSIS_TOOLS@@", path);
                     _log.info("Writing to pipelineConfig.xml: " + line);
                 }
