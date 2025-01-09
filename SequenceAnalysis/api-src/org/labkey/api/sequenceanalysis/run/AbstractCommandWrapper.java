@@ -204,11 +204,6 @@ abstract public class AbstractCommandWrapper implements CommandWrapper
         if (!StringUtils.isEmpty(toolDir))
         {
             String path = System.getenv("PATH");
-
-            getLogger().debug("Existing PATH: " + path);
-            getLogger().debug("toolDir: " + toolDir);
-
-
             if (path == null)
             {
                 path = toolDir;
