@@ -6,6 +6,7 @@ import org.labkey.api.data.DisplayColumn;
 import org.labkey.api.data.DisplayColumnFactory;
 import org.labkey.api.data.RenderContext;
 import org.labkey.api.util.PageFlowUtil;
+import org.labkey.api.writer.HtmlWriter;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -26,7 +27,7 @@ public class GenbankDisplayColumnFactory implements DisplayColumnFactory
         DataColumn ret = new DataColumn(colInfo)
         {
             @Override
-            public void renderGridCellContents(RenderContext ctx, Writer out) throws IOException
+            public void renderGridCellContents(RenderContext ctx, Writer oldWriter, HtmlWriter out) throws IOException
             {
                 Object val = ctx.get(getBoundColumn().getFieldKey());
                 if (val != null)
@@ -35,7 +36,7 @@ public class GenbankDisplayColumnFactory implements DisplayColumnFactory
                     String delim = "";
                     for (String v : vals)
                     {
-                        out.write(delim + "<a href=" + getFormattedURL(v) + ">" + PageFlowUtil.encode(v) + "</a>");
+                        oldWriter.write(delim + "<a href=" + getFormattedURL(v) + ">" + PageFlowUtil.encode(v) + "</a>");
                         delim = "; ";
                     }
                 }

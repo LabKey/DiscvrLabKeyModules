@@ -30,6 +30,7 @@ import org.labkey.api.util.PageFlowUtil;
 import org.labkey.api.view.ActionURL;
 import org.labkey.api.view.HttpView;
 import org.labkey.api.view.template.ClientDependency;
+import org.labkey.api.writer.HtmlWriter;
 import org.labkey.sequenceanalysis.SequenceAnalysisSchema;
 
 import java.io.IOException;
@@ -258,7 +259,7 @@ public class SequenceAnalysisCustomizer implements TableCustomizer
                 }
 
                 @Override
-                public void renderGridCellContents(RenderContext ctx, Writer out) throws IOException
+                public void renderGridCellContents(RenderContext ctx, Writer oldWriter, HtmlWriter out) throws IOException
                 {
                     Integer rowId = ctx.get(getBoundKey("rowId"), Integer.class);
                     if (rowId != null)
@@ -273,12 +274,12 @@ public class SequenceAnalysisCustomizer implements TableCustomizer
                                 ActionURL url = QueryService.get().urlFor(ctx.getViewContext().getUser(), ctx.getContainer(), QueryAction.executeQuery, SequenceAnalysisSchema.SCHEMA_NAME, SequenceAnalysisSchema.TABLE_OUTPUTFILES);
                                 url.addParameter("query.fileSets~contains", token);
 
-                                out.write(delim + "<a href=\"" + url.getURIString() + "\"" + ">" + token + "</a>");
+                                oldWriter.write(delim + "<a href=\"" + url.getURIString() + "\"" + ">" + token + "</a>");
                                 delim = ",<br>";
                             }
                         }
 
-                        out.write("<a class=\"fa fa-pencil lk-dr-action-icon sfs-row\" data-tt=\"tooltip\" data-rowid=\"" + rowId +"\" data-original-title=\"add/edit\"></a>");
+                        oldWriter.write("<a class=\"fa fa-pencil lk-dr-action-icon sfs-row\" data-tt=\"tooltip\" data-rowid=\"" + rowId +"\" data-original-title=\"add/edit\"></a>");
 
                         if (!_handlerRegistered)
                         {
