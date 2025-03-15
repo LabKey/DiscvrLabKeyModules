@@ -26,6 +26,7 @@ import org.labkey.api.query.QueryAction;
 import org.labkey.api.query.QueryForeignKey;
 import org.labkey.api.query.QueryService;
 import org.labkey.api.security.User;
+import org.labkey.api.util.HtmlString;
 import org.labkey.api.util.PageFlowUtil;
 import org.labkey.api.view.ActionURL;
 import org.labkey.api.view.HttpView;
@@ -33,8 +34,7 @@ import org.labkey.api.view.template.ClientDependency;
 import org.labkey.api.writer.HtmlWriter;
 import org.labkey.sequenceanalysis.SequenceAnalysisSchema;
 
-import java.io.IOException;
-import java.io.Writer;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
 
@@ -259,7 +259,7 @@ public class SequenceAnalysisCustomizer implements TableCustomizer
                 }
 
                 @Override
-                public void renderGridCellContents(RenderContext ctx, Writer oldWriter, HtmlWriter out) throws IOException
+                public void renderGridCellContents(RenderContext ctx, HtmlWriter out)
                 {
                     Integer rowId = ctx.get(getBoundKey("rowId"), Integer.class);
                     if (rowId != null)
@@ -268,18 +268,28 @@ public class SequenceAnalysisCustomizer implements TableCustomizer
                         if (value != null)
                         {
                             String[] tokens = value.split(",");
-                            String delim = "";
+                            HtmlString delim = HtmlString.EMPTY_STRING;
                             for (String token : tokens)
                             {
                                 ActionURL url = QueryService.get().urlFor(ctx.getViewContext().getUser(), ctx.getContainer(), QueryAction.executeQuery, SequenceAnalysisSchema.SCHEMA_NAME, SequenceAnalysisSchema.TABLE_OUTPUTFILES);
                                 url.addParameter("query.fileSets~contains", token);
 
-                                oldWriter.write(delim + "<a href=\"" + url.getURIString() + "\"" + ">" + token + "</a>");
-                                delim = ",<br>";
+                                out.write(delim);
+                                out.write(PageFlowUtil.link(token).href(url));
+                                delim = HtmlString.join(Arrays.asList(HtmlString.of(","), HtmlString.BR), HtmlString.EMPTY_STRING);
                             }
                         }
 
-                        oldWriter.write("<a class=\"fa fa-pencil lk-dr-action-icon sfs-row\" data-tt=\"tooltip\" data-rowid=\"" + rowId +"\" data-original-title=\"add/edit\"></a>");
+                        out.write(PageFlowUtil.link("").
+                                addClass("fa fa-pencil").
+                                addClass("lk-dr-action-icon").
+                                addClass("sfs-row").
+                                attributes(PageFlowUtil.map(
+                                        "data-tt", "tooltip",
+                                        "data-rowid", rowId.toString(),
+                                        "data-original-title", "add/edit"
+                                ))
+                        );
 
                         if (!_handlerRegistered)
                         {

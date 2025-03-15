@@ -36,8 +36,8 @@ public class GenbankDisplayColumnFactory implements DisplayColumnFactory
                     String delim = "";
                     for (String v : vals)
                     {
-                        out.write(PageFlowUtil.link(v).href(getFormattedURL(v)));
                         out.write(delim);
+                        out.write(PageFlowUtil.link(v).href(getFormattedURL(v)));
                         delim = "; ";
                     }
                 }
