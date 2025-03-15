@@ -12,8 +12,6 @@ import org.labkey.api.view.HttpView;
 import org.labkey.api.view.template.ClientDependency;
 import org.labkey.api.writer.HtmlWriter;
 
-import java.io.IOException;
-import java.io.Writer;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -39,12 +37,12 @@ public class DownloadSequenceDisplayColumnFactory implements DisplayColumnFactor
             private boolean _handlerRegistered = false;
 
             @Override
-            public void renderGridCellContents(RenderContext ctx, Writer oldWriter, HtmlWriter out) throws IOException
+            public void renderGridCellContents(RenderContext ctx, HtmlWriter out)
             {
-                Object val = ctx.get(FieldKey.fromString(getBoundColumn().getFieldKey().getParent(), "rowId"));
-                oldWriter.write(PageFlowUtil.link("Download Sequence").attributes(Map.of(
+                Integer val = ctx.get(FieldKey.fromString(getBoundColumn().getFieldKey().getParent(), "rowId"), Integer.class);
+                out.write(PageFlowUtil.link("Download Sequence").attributes(Map.of(
                     "data-rowid", val.toString()
-                )).addClass("sdc-row").toString());
+                )).addClass("sdc-row"));
 
                 if (!_handlerRegistered)
                 {

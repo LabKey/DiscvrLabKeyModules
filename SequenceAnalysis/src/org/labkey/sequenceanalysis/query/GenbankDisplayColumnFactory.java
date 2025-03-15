@@ -24,26 +24,25 @@ public class GenbankDisplayColumnFactory implements DisplayColumnFactory
     @Override
     public DisplayColumn createRenderer(ColumnInfo colInfo)
     {
-        DataColumn ret = new DataColumn(colInfo)
+        return new DataColumn(colInfo)
         {
             @Override
-            public void renderGridCellContents(RenderContext ctx, Writer oldWriter, HtmlWriter out) throws IOException
+            public void renderGridCellContents(RenderContext ctx, HtmlWriter out)
             {
-                Object val = ctx.get(getBoundColumn().getFieldKey());
+                String val = ctx.get(getBoundColumn().getFieldKey(), String.class);
                 if (val != null)
                 {
-                    String[] vals = String.valueOf(val).replaceAll("\\s+", "").split(";|,");
+                    String[] vals = val.replaceAll("\\s+", "").split("[;,]");
                     String delim = "";
                     for (String v : vals)
                     {
-                        oldWriter.write(delim + "<a href=" + getFormattedURL(v) + ">" + PageFlowUtil.encode(v) + "</a>");
+                        out.write(PageFlowUtil.link(v).href(getFormattedURL(v)));
+                        out.write(delim);
                         delim = "; ";
                     }
                 }
             }
         };
-
-        return ret;
     }
 
     protected String getFormattedURL(String v)
