@@ -27,6 +27,7 @@ import org.labkey.api.query.QueryForeignKey;
 import org.labkey.api.query.QueryService;
 import org.labkey.api.security.User;
 import org.labkey.api.util.HtmlString;
+import org.labkey.api.util.HtmlStringBuilder;
 import org.labkey.api.util.PageFlowUtil;
 import org.labkey.api.view.ActionURL;
 import org.labkey.api.view.HttpView;
@@ -34,7 +35,6 @@ import org.labkey.api.view.template.ClientDependency;
 import org.labkey.api.writer.HtmlWriter;
 import org.labkey.sequenceanalysis.SequenceAnalysisSchema;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
 
@@ -43,6 +43,8 @@ import java.util.Set;
  */
 public class SequenceAnalysisCustomizer implements TableCustomizer
 {
+    private static final HtmlString COMMA_NEWLINE = HtmlStringBuilder.of(",").append(HtmlString.BR).getHtmlString();
+
     @Override
     public void customize(TableInfo tableInfo)
     {
@@ -275,12 +277,13 @@ public class SequenceAnalysisCustomizer implements TableCustomizer
                                 url.addParameter("query.fileSets~contains", token);
 
                                 out.write(delim);
-                                out.write(PageFlowUtil.link(token).href(url));
-                                delim = HtmlString.join(Arrays.asList(HtmlString.of(","), HtmlString.BR), HtmlString.EMPTY_STRING);
+                                out.write(PageFlowUtil.link(token, url).clearClasses());
+                                delim = COMMA_NEWLINE;
                             }
                         }
 
                         out.write(PageFlowUtil.link("").
+                                clearClasses().
                                 addClass("fa fa-pencil").
                                 addClass("lk-dr-action-icon").
                                 addClass("sfs-row").

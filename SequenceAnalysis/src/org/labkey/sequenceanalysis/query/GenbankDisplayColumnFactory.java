@@ -6,6 +6,7 @@ import org.labkey.api.data.DisplayColumn;
 import org.labkey.api.data.DisplayColumnFactory;
 import org.labkey.api.data.RenderContext;
 import org.labkey.api.util.PageFlowUtil;
+import org.labkey.api.util.URLHelper;
 import org.labkey.api.writer.HtmlWriter;
 
 import java.io.IOException;
@@ -37,7 +38,7 @@ public class GenbankDisplayColumnFactory implements DisplayColumnFactory
                     for (String v : vals)
                     {
                         out.write(delim);
-                        out.write(PageFlowUtil.link(v).href(getFormattedURL(v)));
+                        out.write(PageFlowUtil.link(v).href(getFormattedURL(v)).clearClasses());
                         delim = "; ";
                     }
                 }

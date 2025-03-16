@@ -267,7 +267,7 @@ public class SequenceAnalysisUserSchema extends SimpleUserSchema
                                 ActionURL url = QueryService.get().urlFor(getUser(), ctx.getContainer(), QueryAction.executeQuery, SequenceAnalysisSchema.SCHEMA_NAME, SequenceAnalysisSchema.TABLE_READ_DATA);
                                 url.addFilter("query", FieldKey.fromString("readset"), CompareType.EQUAL, o);
 
-                                out.write(PageFlowUtil.link("View File(s)").href(url).addClass("labkey-text-link"));
+                                out.write(PageFlowUtil.link("View File(s)", url));
                             }
                             else
                             {
@@ -458,7 +458,7 @@ public class SequenceAnalysisUserSchema extends SimpleUserSchema
                             ActionURL url = DetailsURL.fromString(_baseUrl + PageFlowUtil.encode(token), ctx.getContainer()).getActionURL();
 
                             out.write(delim);
-                            out.write(PageFlowUtil.link(token).href(url));
+                            out.write(PageFlowUtil.link(token, url).clearClasses());
                             delim = HtmlString.BR;
                         }
                     }

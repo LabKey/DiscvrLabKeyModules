@@ -40,9 +40,9 @@ public class DownloadSequenceDisplayColumnFactory implements DisplayColumnFactor
             public void renderGridCellContents(RenderContext ctx, HtmlWriter out)
             {
                 Integer val = ctx.get(FieldKey.fromString(getBoundColumn().getFieldKey().getParent(), "rowId"), Integer.class);
-                out.write(PageFlowUtil.link("Download Sequence").attributes(Map.of(
-                    "data-rowid", val.toString()
-                )).addClass("sdc-row"));
+                out.write(PageFlowUtil.link("Download Sequence").
+                        attributes(Map.of("data-rowid", val.toString())).
+                        addClass("sdc-row"));
 
                 if (!_handlerRegistered)
                 {
