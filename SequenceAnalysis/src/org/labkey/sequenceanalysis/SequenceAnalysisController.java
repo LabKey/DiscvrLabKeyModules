@@ -171,6 +171,7 @@ import org.labkey.sequenceanalysis.util.ChainFileValidator;
 import org.labkey.sequenceanalysis.util.FastqUtils;
 import org.labkey.sequenceanalysis.util.SequenceUtil;
 import org.labkey.vfs.FileLike;
+import org.labkey.vfs.FileSystemLike;
 import org.springframework.beans.PropertyValues;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
@@ -1119,14 +1120,21 @@ public class SequenceAnalysisController extends SpringActionController
                 if (form.getFileNames() != null)
                 {
                     //TODO: consider proper container??
-                    File root = PipelineService.get().findPipelineRoot(getContainer()).getRootPath();
-                    File base = root;
+                    PipeRoot root = PipelineService.get().findPipelineRoot(getContainer());
+
+                    if (null == root)
+                    {
+                        throw new PipelineJobException("Unable to find pipeline root for container: " + getContainer().getPath());
+                    }
+
+                    FileLike base = root.getRootFileLike();
+
                     if (form.getPath() != null)
-                        base = new File(base, form.getPath());
+                        base = base.resolveChild(form.getPath());
 
                     for (String fileName : form.getFileNames())
                     {
-                        File f = new File(base, fileName);
+                        File f = FileSystemLike.toFile(base.resolveChild(fileName));
                         ExpData data = ExperimentService.get().getExpDataByURL(f, getContainer());
                         if (data != null)
                         {
@@ -1137,7 +1145,7 @@ public class SequenceAnalysisController extends SpringActionController
                             Map<String, Object> map = new HashMap<>();
                             map.put("fileName", fileName);
                             map.put("filePath", f.getPath());
-                            map.put("relPath", FileUtil.relativePath(FileUtil.getAbsoluteCaseSensitiveFile(root).getPath(), FileUtil.getAbsoluteCaseSensitiveFile(f).getPath()));
+                            map.put("relPath", FileUtil.relativePath(FileUtil.getAbsoluteCaseSensitiveFile(FileSystemLike.toFile(root.getRootFileLike())).getPath(), FileUtil.getAbsoluteCaseSensitiveFile(f).getPath()));
                             map.put("container", getContainer().getId());
                             map.put("containerPath", getContainer().getPath());
                             String basename = SequenceTaskHelper.getUnzippedBaseName(fileName);
@@ -2320,7 +2328,12 @@ public class SequenceAnalysisController extends SpringActionController
             //resolve files
             List<File> files = new ArrayList<>();
             PipeRoot root = PipelineService.get().getPipelineRootSetting(getContainer());
-            File baseDir = StringUtils.trimToNull(form.getPath()) == null ? root.getRootPath() : new File(root.getRootPath(), form.getPath());
+            FileLike baseDir = null != root ? root.getRootFileLike() : null;
+            if (baseDir == null)
+            {
+                errors.reject(ERROR_MSG, "Pipeline root not configured");
+                return null;
+            }
             if (!baseDir.exists())
             {
                 errors.reject(ERROR_MSG, "Unable to find directory: " + baseDir.getPath());
@@ -2335,7 +2348,7 @@ public class SequenceAnalysisController extends SpringActionController
 
             for (String fn : form.getFileNames())
             {
-                File f = new File(baseDir, fn);
+                File f = FileSystemLike.toFile(baseDir.resolveChild(fn));
                 if (f.exists())
                 {
                     files.add(f);
