@@ -435,8 +435,21 @@ public class SequenceAnalysisController extends SpringActionController
         @Override
         public void export(TempImageAction form, HttpServletResponse response, BindException errors) throws Exception
         {
-            File parentDir = form.getDirectory() == null ? FileUtil.getTempDirectory() : new File(FileUtil.getTempDirectory(), form.getDirectory());
-            File targetFile = new File(parentDir, form.getFileName());
+            File targetFile;
+            FileLike tempDirRoot = new FileSystemLike.Builder(FileUtil.getTempDirectory()).root();
+            if (!(tempDirRoot.getFileSystem().isDescendant(tempDirRoot, new File(form.getDirectory()).toURI())))
+            {
+                throw new FileNotFoundException("Directory '" + form.getDirectory() + "' is not the descendant of '" + tempDirRoot.getFileSystem() + "'");
+            }
+            FileLike parentDirFileLike = form.getDirectory() == null ? tempDirRoot : tempDirRoot.resolveFile(new Path(form.getDirectory()));
+            File parentDir = FileSystemLike.toFile(parentDirFileLike);
+
+            if (!(parentDirFileLike.getFileSystem().isDescendant(parentDirFileLike, new File(form.getFileName()).toURI())))
+            {
+                throw new FileNotFoundException("File '" + form.getFileName() + "' is not the descendant of '" + parentDirFileLike.getPath() + "'");
+            }
+
+            targetFile = FileSystemLike.toFile(parentDirFileLike.resolveChild(form.getFileName()));
             targetFile = FileUtil.getAbsoluteCaseSensitiveFile(targetFile);
 
             if (!NetworkDrive.exists(targetFile))
