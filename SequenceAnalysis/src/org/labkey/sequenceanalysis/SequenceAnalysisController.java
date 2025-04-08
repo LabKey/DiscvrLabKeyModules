@@ -439,7 +439,7 @@ public class SequenceAnalysisController extends SpringActionController
             FileLike tempDirRoot = new FileSystemLike.Builder(FileUtil.getTempDirectory()).root();
             if (!(tempDirRoot.getFileSystem().isDescendant(tempDirRoot, new File(form.getDirectory()).toURI())))
             {
-                throw new FileNotFoundException("Directory '" + form.getDirectory() + "' is not the descendant of '" + tempDirRoot.getFileSystem() + "'");
+                throw new FileNotFoundException("Directory '" + form.getDirectory() + "' is not the descendant of '" + tempDirRoot.getPath() + "'");
             }
             FileLike parentDirFileLike = form.getDirectory() == null ? tempDirRoot : tempDirRoot.resolveFile(new Path(form.getDirectory()));
             File parentDir = FileSystemLike.toFile(parentDirFileLike);
