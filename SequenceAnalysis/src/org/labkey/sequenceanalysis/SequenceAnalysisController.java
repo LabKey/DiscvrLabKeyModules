@@ -2202,12 +2202,15 @@ public class SequenceAnalysisController extends SpringActionController
             //resolve files
             List<File> files = new ArrayList<>();
             PipeRoot root = PipelineService.get().getPipelineRootSetting(getContainer());
-            FileLike baseDir = null != root ? root.getRootFileLike() : null;
-            if (baseDir == null)
+
+            if (root == null)
             {
                 errors.reject(ERROR_MSG, "Pipeline root not configured");
                 return null;
             }
+
+            FileLike baseDir = StringUtils.trimToNull(form.getPath()) == null ? root.getRootFileLike() : root.getRootFileLike().resolveFile(new Path(form.getPath()));
+
             if (!baseDir.exists())
             {
                 errors.reject(ERROR_MSG, "Unable to find directory: " + baseDir.getPath());
