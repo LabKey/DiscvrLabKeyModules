@@ -1143,7 +1143,7 @@ public class SequenceAnalysisController extends SpringActionController
                     FileLike base = root.getRootFileLike();
 
                     if (form.getPath() != null)
-                        base = base.resolveChild(form.getPath());
+                        base = base.resolveFile(new Path(form.getPath()));
 
                     for (String fileName : form.getFileNames())
                     {
