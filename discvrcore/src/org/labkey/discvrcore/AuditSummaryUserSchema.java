@@ -201,10 +201,10 @@ public class AuditSummaryUserSchema extends SimpleUserSchema
             Dataset d1 = StudyService.get().createDataset(getContainer(true), TestContext.get().getUser(), name, null, isDemographics);
             d1.setKeyManagementType(Dataset.KeyManagementType.GUID);
             d1.setKeyPropertyName("objectId");
-            DomainProperty objectId1 = d1.getDomain().addProperty();
+            DomainProperty objectId1 = d1.getDomain(true).addProperty();
             objectId1.setName("objectId");
             objectId1.setPropertyURI(AuditSummaryUserSchema.class.getName() + ":ObjectId");
-            d1.getDomain().save(TestContext.get().getUser());
+            d1.getDomain(true).save(TestContext.get().getUser());
             d1.save(TestContext.get().getUser());
 
             return d1;
