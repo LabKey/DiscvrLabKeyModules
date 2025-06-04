@@ -561,7 +561,7 @@ public class SequenceAnalysisController extends SpringActionController
                 {
                     keys.add(ConvertHelper.convert(key, Integer.class));
                 }
-                SimpleFilter filter = new SimpleFilter(FieldKey.fromString(_table.getPkColumns().get(0).getColumnName()), keys, CompareType.IN);
+                SimpleFilter filter = new SimpleFilter(FieldKey.fromString(_table.getPkColumns().get(0).getName()), keys, CompareType.IN);
 
                 TableSelector ts = new TableSelector(_table, Collections.singleton("container"), filter, null);
                 ts.forEachResults(rs -> {
