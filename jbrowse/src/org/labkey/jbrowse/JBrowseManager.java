@@ -253,6 +253,7 @@ public class JBrowseManager
                 // Repeat without output going direct to the server log:
                 try
                 {
+                    _log.info("Retrying without all output direct to the system log:");
                     wrapper.execute(Arrays.asList(exe.getPath(), "help"));
                 }
                 catch (Exception e)
@@ -272,11 +273,6 @@ public class JBrowseManager
     {
         FileContentService fileService = FileContentService.get();
         File fileRoot = fileService == null ? null : fileService.getFileRoot(c, FileContentService.ContentType.files);
-        if (fileRoot == null || !fileRoot.exists())
-        {
-            return null;
-        }
-
         if (fileRoot == null || !fileRoot.exists())
         {
             return null;
