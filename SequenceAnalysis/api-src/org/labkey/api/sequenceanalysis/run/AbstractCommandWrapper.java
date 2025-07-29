@@ -117,7 +117,7 @@ abstract public class AbstractCommandWrapper implements CommandWrapper
 
         if (getWorkingDir() != null)
         {
-            getLogger().debug("using working directory: " + getWorkingDir().getPath());
+            getLogger().log(_logLevel, "using working directory: " + getWorkingDir().getPath());
             pb.directory(getWorkingDir());
         }
 
@@ -208,8 +208,8 @@ abstract public class AbstractCommandWrapper implements CommandWrapper
 
             if (_logPath)
             {
-                getLogger().debug("Existing PATH: " + path);
-                getLogger().debug("toolDir: " + toolDir);
+                getLogger().log(_logLevel, "Existing PATH: " + path);
+                getLogger().log(_logLevel, "toolDir: " + toolDir);
             }
 
             if (path == null)
@@ -234,7 +234,7 @@ abstract public class AbstractCommandWrapper implements CommandWrapper
 
             if (_logPath)
             {
-                getLogger().debug("using path: " + path);
+                getLogger().log(_logLevel, "using path: " + path);
             }
             pb.environment().put("PATH", path);
         }
