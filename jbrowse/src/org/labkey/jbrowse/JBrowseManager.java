@@ -17,6 +17,7 @@
 package org.labkey.jbrowse;
 
 import org.apache.commons.lang3.SystemUtils;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
@@ -237,6 +238,8 @@ public class JBrowseManager
         {
             File exe = JBrowseManager.get().getJbrowseCli();
             SimpleScriptWrapper wrapper = new SimpleScriptWrapper(_log);
+            wrapper.setLogLevel(Level.INFO);
+            wrapper.setLogPath(true);
             wrapper.setThrowNonZeroExits(false);
 
             String output = wrapper.executeWithOutput(Arrays.asList(exe.getPath(), "help"));
@@ -246,6 +249,16 @@ public class JBrowseManager
                 wrapper.getCommandsExecuted().forEach(_log::error);
                 _log.error("output: ");
                 _log.error(output);
+
+                // Repeat without output going direct to the server log:
+                try
+                {
+                    wrapper.execute(Arrays.asList(exe.getPath(), "help"));
+                }
+                catch (Exception e)
+                {
+                    // Ignore
+                }
 
                 throw new RuntimeException("Non-zero exit running testJBrowseCli: " + wrapper.getLastReturnCode());
             }
