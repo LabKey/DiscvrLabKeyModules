@@ -275,7 +275,7 @@ abstract public class AbstractCommandWrapper implements CommandWrapper
         return _log;
     }
 
-    protected void setLogLevel(Level logLevel)
+    public void setLogLevel(Level logLevel)
     {
         _logLevel = logLevel;
     }
