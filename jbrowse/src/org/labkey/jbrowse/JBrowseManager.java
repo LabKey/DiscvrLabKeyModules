@@ -43,6 +43,7 @@ import org.labkey.api.security.User;
 import org.labkey.api.security.permissions.InsertPermission;
 import org.labkey.api.sequenceanalysis.SequenceAnalysisService;
 import org.labkey.api.sequenceanalysis.pipeline.ReferenceGenome;
+import org.labkey.api.sequenceanalysis.run.AbstractCommandWrapper;
 import org.labkey.api.sequenceanalysis.run.SimpleScriptWrapper;
 import org.labkey.api.util.FileType;
 import org.labkey.api.util.FileUtil;
@@ -247,6 +248,19 @@ public class JBrowseManager
             {
                 _log.error("Non-zero exit from testJBrowseCli: " + wrapper.getLastReturnCode());
                 wrapper.getCommandsExecuted().forEach(_log::error);
+                _log.error("NODE_PATH: " + System.getenv("NODE_PATH"));
+
+                File node = AbstractCommandWrapper.resolveFileInPath("node", null, false);
+                if (node == null)
+                {
+                    _log.info("Unable to find node in PATH, trying node.exe");
+                    node = AbstractCommandWrapper.resolveFileInPath("node.exe", null, false);
+                    if (node == null)
+                    {
+                        _log.info("Unable to find node.exe in PATH");
+                    }
+                }
+
                 _log.error("output: ");
                 _log.error(output);
 
