@@ -261,6 +261,8 @@ public class JBrowseManager
                     }
                 }
 
+                _log.info("node executable location: " + node);
+
                 _log.error("output: ");
                 _log.error(output);
 
