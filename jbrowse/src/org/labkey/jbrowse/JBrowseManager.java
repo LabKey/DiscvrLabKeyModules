@@ -243,6 +243,18 @@ public class JBrowseManager
             wrapper.setLogPath(true);
             wrapper.setThrowNonZeroExits(false);
 
+            File node = AbstractCommandWrapper.resolveFileInPath("node", null, false);
+            if (node == null)
+            {
+                _log.info("Unable to find node in PATH, trying node.exe");
+                node = AbstractCommandWrapper.resolveFileInPath("node.exe", null, false);
+                if (node == null)
+                {
+                    _log.info("Unable to find node.exe in PATH");
+                }
+            }
+            _log.info("node executable location: " + node);
+
             String output = wrapper.executeWithOutput(Arrays.asList(exe.getPath(), "help"));
             if (wrapper.getLastReturnCode() != 0)
             {
@@ -250,26 +262,15 @@ public class JBrowseManager
                 wrapper.getCommandsExecuted().forEach(_log::error);
                 _log.error("NODE_PATH: " + System.getenv("NODE_PATH"));
 
-                File node = AbstractCommandWrapper.resolveFileInPath("node", null, false);
-                if (node == null)
-                {
-                    _log.info("Unable to find node in PATH, trying node.exe");
-                    node = AbstractCommandWrapper.resolveFileInPath("node.exe", null, false);
-                    if (node == null)
-                    {
-                        _log.info("Unable to find node.exe in PATH");
-                    }
-                }
-
-                _log.info("node executable location: " + node);
-
                 _log.error("output: ");
                 _log.error(output);
 
                 // Repeat without output going direct to the server log:
                 try
                 {
-                    _log.info("Retrying without all output direct to the system log:");
+                    // NOTE: this is only useful if "npx pkg --debug" is used when building the executables
+                    _log.info("Retrying without all output direct to the system log and DEBUG_PKG=1:");
+                    wrapper.addToEnvironment("DEBUG_PKG", "1");
                     wrapper.execute(Arrays.asList(exe.getPath(), "help"));
                 }
                 catch (Exception e)
