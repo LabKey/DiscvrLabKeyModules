@@ -397,13 +397,6 @@ public class SequenceJob extends PipelineJob implements FileAnalysisJobSupport, 
         return FileUtil.appendName(dir.toNioPathForWrite().toFile(),_folderPrefix + ".json");
     }
 
-    @Nullable
-    @Override
-    public File getJobInfoFile()
-    {
-        return FileUtil.appendName(_webserverJobDir.toNioPathForWrite().toFile(), FileUtil.makeLegalName(_jobName) + ".job.json");
-    }
-
     @Override
     public FileType.gzSupportLevel getGZPreference()
     {
