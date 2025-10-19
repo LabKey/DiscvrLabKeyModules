@@ -161,10 +161,9 @@ public class SequenceJob extends PipelineJob implements FileAnalysisJobSupport, 
         params.put("labkeyFolderPath", getContainer().isWorkbook() ? getContainer().getParent().getPath() : getContainer().getPath());
     }
 
-    private Path _getLogFile()
+    private FileLike _getLogFile()
     {
-        var file = FileUtil.findUniqueFileName((FileUtil.makeLegalName(_jobName) + ".log"), getDataDirectoryFileObject());
-        return file.toNioPathForWrite();
+        return FileUtil.findUniqueFileName((FileUtil.makeLegalName(_jobName) + ".log"), getDataDirectoryFileObject());
     }
 
     @Override
