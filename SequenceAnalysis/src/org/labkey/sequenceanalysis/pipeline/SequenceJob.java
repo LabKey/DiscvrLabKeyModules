@@ -341,9 +341,9 @@ public class SequenceJob extends PipelineJob implements FileAnalysisJobSupport, 
     }
 
     @Override
-    public File getDataDirectory()
+    public FileLike getDataDirectoryFileLike()
     {
-        return _webserverJobDir.toNioPathForWrite().toFile();
+        return _webserverJobDir;
     }
 
     public FileLike getDataDirectoryFileObject()
