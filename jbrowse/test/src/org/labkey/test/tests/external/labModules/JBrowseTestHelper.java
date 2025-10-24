@@ -149,6 +149,7 @@ public class JBrowseTestHelper
         }
 
         test.waitForElement(l);
+        WebDriverWrapper.sleep(100); // This allows a short window for rendering prior to clicking variants
 
         return By.xpath(l.toXpath());
     }
