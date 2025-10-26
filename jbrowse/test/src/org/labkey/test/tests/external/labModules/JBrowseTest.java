@@ -438,6 +438,11 @@ public class JBrowseTest extends BaseWebDriverTest
         beginAt("/" + getProjectName() + "/jbrowse-jbrowse.view?session=mgap&location=1:8328..8842");
         waitForJBrowseToLoad();
 
+        // This will wait for them, allowing the full browser to lod:
+        getVariantWithinTrack("mgap_hg38", "SNV C -> T");
+        getVariantWithinTrack("mgap_hg38", "SNV G -> C");
+
+
         Actions actions = new Actions(getDriver());
         WebElement toClick = getDriver().findElements(getVariantWithinTrack("mgap_hg38", "SNV A -> G")).stream().filter(WebElement::isDisplayed).collect(JBrowseTestHelper.toSingleton());
         actions.click(toClick).perform();
