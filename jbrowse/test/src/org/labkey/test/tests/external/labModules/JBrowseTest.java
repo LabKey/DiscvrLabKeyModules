@@ -452,8 +452,8 @@ public class JBrowseTest extends BaseWebDriverTest
 
         Actions actions = new Actions(getDriver());
         WebElement toClick = getDriver().findElements(getVariantWithinTrack("mgap_hg38", "SNV T -> C")).stream().filter(WebElement::isDisplayed).collect(JBrowseTestHelper.toSingleton()); // 1:137..137
-        actions.clickAndHold(toClick).perform();
-        actions.release().perform();
+        WebDriverWrapper.sleep(100); // This allows a short window for rendering prior to clicking variants
+        actions.click().perform();        
         
         waitForElement(Locator.tagWithText("div", "1:137"));
         assertElementPresent(Locator.tagWithText("td", "Minor Allele Frequency"));
