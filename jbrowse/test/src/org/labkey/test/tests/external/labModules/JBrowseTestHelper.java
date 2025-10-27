@@ -16,6 +16,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import java.io.File;
 import java.util.stream.Collector;
@@ -149,7 +150,8 @@ public class JBrowseTestHelper
         }
 
         test.waitForElement(l);
-        WebDriverWrapper.sleep(100); // This allows a short window for rendering prior to clicking variants
+        WebElement el = test.waitForElement(l);
+        test.shortWait().until(ExpectedConditions.elementToBeClickable(el));
 
         return By.xpath(l.toXpath());
     }
