@@ -36,7 +36,6 @@ import org.labkey.test.BaseWebDriverTest;
 import org.labkey.test.Locator;
 import org.labkey.test.TestFileUtils;
 import org.labkey.test.TestTimeoutException;
-import org.labkey.test.WebDriverWrapper;
 import org.labkey.test.WebTestHelper;
 import org.labkey.test.categories.External;
 import org.labkey.test.categories.LabModule;
@@ -457,7 +456,10 @@ public class JBrowseTest extends BaseWebDriverTest
 
         Actions actions = new Actions(getDriver());
         WebElement toClick = getDriver().findElements(getVariantWithinTrack("mgap_hg38", "SNV T -> C")).stream().filter(WebElement::isDisplayed).collect(JBrowseTestHelper.toSingleton()); // 1:137..137
-        actions.click(toClick).perform();        
+        actions.moveToElement(toClick)
+            .pause(500)
+            .click()
+            .perform();
         waitForElement(Locator.tagWithText("div", "1:137"));
         assertElementPresent(Locator.tagWithText("td", "Minor Allele Frequency"));
     }
