@@ -16,7 +16,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import java.io.File;
 import java.util.stream.Collector;
@@ -150,7 +149,7 @@ public class JBrowseTestHelper
         }
 
         test.waitForElement(l);
-        
+
         return By.xpath(l.toXpath());
     }
 
