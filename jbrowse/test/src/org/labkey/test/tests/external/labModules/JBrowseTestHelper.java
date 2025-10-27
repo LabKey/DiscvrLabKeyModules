@@ -150,9 +150,7 @@ public class JBrowseTestHelper
         }
 
         test.waitForElement(l);
-        WebElement el = test.waitForElement(l);
-        test.shortWait().until(ExpectedConditions.elementToBeClickable(el));
-
+        
         return By.xpath(l.toXpath());
     }
 
