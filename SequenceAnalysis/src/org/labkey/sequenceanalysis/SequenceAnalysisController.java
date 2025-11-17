@@ -1876,14 +1876,14 @@ public class SequenceAnalysisController extends SpringActionController
             return getJobParameters() != null && getJobParameters().optBoolean("submitJobToReadsetContainer", false);
         }
 
-        public List<File> getFiles(PipeRoot pr) throws PipelineValidationException
+        public List<FileLike> getFiles(PipeRoot pr) throws PipelineValidationException
         {
             if (getJobParameters() == null || getJobParameters().get("inputFiles") == null)
             {
                 return null;
             }
 
-            List<File> ret = new ArrayList<>();
+            List<FileLike> ret = new ArrayList<>();
             JSONArray inputFiles = getJobParameters().getJSONArray("inputFiles");
             String path = getJobParameters().optString("path");
             for (JSONObject o : JsonUtil.toJSONObjectList(inputFiles))
@@ -1900,7 +1900,7 @@ public class SequenceAnalysisController extends SpringActionController
                         throw new PipelineValidationException("Missing file for data: " + o.get("dataId"));
                     }
 
-                    ret.add(d.getFile());
+                    ret.add(d.getFileLike());
                 }
                 else if (o.has("relPath") || o.has("fileName"))
                 {
@@ -1927,7 +1927,7 @@ public class SequenceAnalysisController extends SpringActionController
                         throw new PipelineValidationException("Unknown file: " + o.getString("relPath") + " / " + o.getString("fileName"));
                     }
 
-                    ret.add(f.toNioPathForRead().toFile());
+                    ret.add(f);
                 }
                 else if (o.opt("filePath") != null)
                 {
