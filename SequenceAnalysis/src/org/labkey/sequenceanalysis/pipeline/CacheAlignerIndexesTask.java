@@ -17,6 +17,7 @@ import org.labkey.api.sequenceanalysis.pipeline.ReferenceGenome;
 import org.labkey.api.sequenceanalysis.pipeline.ReferenceGenomeManager;
 import org.labkey.api.sequenceanalysis.pipeline.SequencePipelineService;
 import org.labkey.api.util.FileType;
+import org.labkey.api.util.FileUtil;
 import org.labkey.sequenceanalysis.run.util.FastaIndexer;
 import org.labkey.vfs.FileSystemLike;
 
@@ -132,7 +133,7 @@ public class CacheAlignerIndexesTask extends WorkDirectoryTask<CacheAlignerIndex
 
                     boolean hasIndex = AlignerIndexUtil.hasCachedIndex(alignmentStep.getPipelineCtx(), alignmentStep.getIndexCachedDirName(getJob()), referenceGenome);
                     File dir = FileSystemLike.toFile(_wd.getDir());
-                    File outDir = new File(dir, alignmentStep.getIndexCachedDirName(getJob()));
+                    File outDir = FileUtil.appendName(dir, alignmentStep.getIndexCachedDirName(getJob()));
                     if (!hasIndex)
                     {
                         //create locally first
