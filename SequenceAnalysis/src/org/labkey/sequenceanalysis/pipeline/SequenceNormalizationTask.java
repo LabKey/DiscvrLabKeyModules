@@ -335,7 +335,8 @@ public class SequenceNormalizationTask extends WorkDirectoryTask<SequenceNormali
                 {
                     for (FileGroup.FilePair fp : lane)
                     {
-                        File localCopy = _wd.getWorkingCopyForInput(FileSystemLike.wrapFile(fp.file1)).toNioPathForRead().toFile();
+                        FileLike localCopyFileLike = _wd.getWorkingCopyForInput(FileSystemLike.wrapFile(fp.file1));
+                        File localCopy = localCopyFileLike == null ? null : localCopyFileLike.toNioPathForRead().toFile();
                         if (localCopy != null)
                         {
                             getJob().getLogger().debug("using local working copy for file: " + fp.file1.getPath());
