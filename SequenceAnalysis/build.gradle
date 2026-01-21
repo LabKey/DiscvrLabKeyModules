@@ -148,10 +148,6 @@ dependencies {
                 exclude group: "org.apache.commons", module: "commons-collections4"
                 // NOTE: this is a dependency of picard->google-cloud-storage. there is a vunerability in 1.6.8 that does not seem fixed as of 1.6.9
                 exclude group: "org.threeten", module: "threetenbp"
-                // google-genai dependencies in API pull in newer versions of these modules
-                exclude group: "com.google.api",  module : "api-common"
-                exclude group: "com.google.auth", module : "google-auth-library-oauth2-http"
-                exclude group: "com.google.auth", module : "google-auth-library-credentials"
             }
     )
 
