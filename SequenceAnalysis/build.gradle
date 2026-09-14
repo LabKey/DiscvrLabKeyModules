@@ -22,6 +22,7 @@ import java.util.regex.Matcher
 configurations.all {
     resolutionStrategy {
         force "org.glassfish.jaxb:jaxb-runtime:${jaxbVersion}"
+        force "org.freemarker:freemarker:2.3.35" // until picard version is updated use this version or later
     }
 }
 
@@ -135,7 +136,7 @@ dependencies {
     BuildUtils.addExternalDependency(
             project,
             new ExternalDependency(
-                    "com.github.broadinstitute:picard:3.4.0",
+                    "com.github.broadinstitute:picard:3.5.0",
                     "Picard Tools Lib",
                     "PicardTools",
                     "https://github.com/broadinstitute/picard",
