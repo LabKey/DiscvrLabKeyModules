@@ -26,8 +26,8 @@
     "@jbrowse/plugin-variants": "^4.3.0",
     "@jbrowse/plugin-linear-genome-view": "^4.3.0",
     "@jbrowse/react-linear-genome-view2": "^4.3.0",
-    "@labkey/api": "^1.52.2",
-    "@labkey/components": "^7.48.0",
+    "@labkey/api": "^1.52.5",
+    "@labkey/components": "^7.64.1",
     "@mui/icons-material": "^7.3.9",
     "@mui/material": "^7.3.9",
     "@mui/utils": "^7.3.9",
@@ -41,7 +41,7 @@
     "rxjs": "^7.8.2"
   },
   "devDependencies": {
-    "@labkey/build": "^10.0.0",
+    "@labkey/build": "^10.1.2",
     "@types/jest": "^30.0.0",
     "@types/react": "^19.2.0",
     "@types/react-dom": "^19.2.0",
