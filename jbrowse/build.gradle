@@ -11,6 +11,12 @@ import org.labkey.gradle.util.BuildUtils;
 //	}
 //}
 
+configurations.configureEach {
+    resolutionStrategy {
+        force "org.freemarker:freemarker:2.3.35" // from SequenceAnalysis. Use until picard version is updated to use this version or later
+    }
+}
+
 dependencies {
     apiImplementation "com.github.samtools:htsjdk:${htsjdkVersion}"
 	BuildUtils.addLabKeyDependency(project: project, config: "implementation", depProjectPath: ":server:modules:LabDevKitModules:LDK", depProjectConfig: "apiJarFile")
