@@ -507,7 +507,7 @@ public class JBrowseLuceneSearch
 
         public LuceneIndexCache()
         {
-            _cache = CacheManager.getStringKeyCache(1000, CacheManager.UNLIMITED, "JBrowseLuceneSearchCache");
+            _cache = CacheManager.getCache(String.class, 1000, CacheManager.UNLIMITED, "JBrowseLuceneSearchCache");
 
         }
 
